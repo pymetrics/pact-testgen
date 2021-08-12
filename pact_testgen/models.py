@@ -1,22 +1,11 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Extra, Field, conint, constr
+from pydantic import BaseModel, Extra, conint
 
 
-class Headers(BaseModel):
-    pass
-
-    class Config:
-        extra = Extra.allow
-
-
-class Interaction(BaseModel):
-    description: str
-    matchingRules: Optional[List[MatchingRule]]
-    providerStates: List[ProviderState]
-    request: Request
-    response: Response
+class Pacticipant(BaseModel):
+    name: str
 
 
 class Match(Enum):
@@ -39,8 +28,16 @@ class MatchingRule(BaseModel):
     body: Dict[str, MatchingBodyRule]
 
 
-class Metadata(BaseModel):
-    pactSpecification: Optional[PactSpecification]
+class ProviderState(BaseModel):
+    name: str
+    params: Optional[Dict]
+
+
+class Headers(BaseModel):
+    pass
+
+    class Config:
+        extra = Extra.allow
 
 
 class Method(Enum):
@@ -54,6 +51,8 @@ class Method(Enum):
     HEAD = "HEAD"
     options = "options"
     OPTIONS = "OPTIONS"
+    patch = "patch"
+    PATCH = "PATCH"
     post = "post"
     POST = "POST"
     put = "put"
@@ -62,37 +61,38 @@ class Method(Enum):
     TRACE = "TRACE"
 
 
-class Pact(BaseModel):
-    consumer: Pacticipant
-    interactions: List[Interaction]
-    metadata: Optional[Metadata]
-    provider: Pacticipant
-
-
-class Pacticipant(BaseModel):
-    name: str
-
-
-class PactSpecification(BaseModel):
-    version: str
-
-
-class ProviderState(BaseModel):
-    name: str
-    params: Optional[Dict]
-
-
 class Request(BaseModel):
     body: Optional[Any]
     headers: Optional[Headers]
     method: Method
     path: str
-    query: Optional[
-        constr(regex=r"^$|^[^=&]+=[^=&]+&?$|^[^=&]+=[^=&]+(&[^=&]+=[^=&]+)*&?$")
-    ] = None
+    query: Optional[Dict[str, List[str]]]
 
 
 class Response(BaseModel):
     body: Optional[Any]
     headers: Optional[Headers]
     status: conint(ge=100, le=599)
+
+
+class Interaction(BaseModel):
+    description: str
+    matchingRules: Optional[List[MatchingRule]]
+    providerStates: List[ProviderState]
+    request: Request
+    response: Response
+
+
+class PactSpecification(BaseModel):
+    version: str
+
+
+class Metadata(BaseModel):
+    pactSpecification: Optional[PactSpecification]
+
+
+class Pact(BaseModel):
+    consumer: Pacticipant
+    interactions: List[Interaction]
+    metadata: Optional[Metadata]
+    provider: Pacticipant
