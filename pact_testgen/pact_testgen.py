@@ -2,6 +2,8 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict
 
+from .models import Pact, TestCase
+
 
 @dataclass
 class Response:
@@ -16,3 +18,19 @@ class Response:
             headers=dict(response.headers),
             status_code=response.status_code
         )
+
+
+
+def convert_to_test_cases(Pact) -> TestCase:
+    """
+    Given a Pact file, create TestCase representations
+    according to the following:
+
+
+    - One test case per provider state name.
+
+    - Each interaction for a given provider state name
+      becomes a test method.
+    """
+    # TODO: Implement me!
+    raise NotImplementedError()

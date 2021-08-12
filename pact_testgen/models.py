@@ -97,3 +97,16 @@ class Pact(BaseModel):
     interactions: List[Interaction]
     metadata: Optional[Metadata]
     provider: Pacticipant
+
+
+class TestMethod:
+    request: Request
+    response: Response
+    # TODO: Implement me!
+
+
+class TestCase:
+    base_class: str
+    import_path: str
+    # TODO: Implement me!
+    test_methods: List[TestMethod]
