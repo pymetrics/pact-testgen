@@ -1,0 +1,93 @@
+{
+  "consumer": {
+    "name": "ApplicationServiceClient"
+  },
+  "provider": {
+    "name": "ApplicationService"
+  },
+  "interactions": [
+    {
+      "providerStates": [
+        {
+          "name": "ApplicationTemplate ID 1 exists",
+          "params": {
+            "id": 1
+          }
+        }
+      ],
+      "description": "a request for ApplicationTemplate ID 1",
+      "request": {
+        "method": "GET",
+        "path": "/v1/applicationTemplates/1/"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "uuid": "f85d6e0a-3dfb-421e-9510-5c06443627fb",
+          "display_name": "Application:1",
+          "unique_id": "123",
+          "intro_text": "intro text",
+          "config": {},
+          "steps": [
+            {
+              "id": 1,
+              "order": "1",
+              "type": "GS",
+              "display_name": "An application step",
+              "config": {},
+              "links": {
+                "something": "http://applications/foo/1/"
+              }
+            }
+          ],
+          "links": {
+            "foo": "http://applications/foo/1/"
+          }
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.steps": {
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "ApplicationTemplate ID 1 exists",
+          "params": {
+            "id": 1
+          }
+        }
+      ],
+      "description": "a deletion request",
+      "request": {
+        "method": "DELETE",
+        "path": "/v1/applicationTemplates/1/"
+      },
+      "response": {
+        "status": 204
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  }
+}
