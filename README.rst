@@ -1,0 +1,37 @@
+===================
+Pact Test Generator
+===================
+
+
+.. image:: https://img.shields.io/pypi/v/pact_testgen.svg
+        :target: https://pypi.python.org/pypi/pact_testgen
+
+.. image:: https://img.shields.io/travis/chrislawlor/pact_testgen.svg
+        :target: https://travis-ci.com/chrislawlor/pact_testgen
+
+.. image:: https://readthedocs.org/projects/pact-testgen/badge/?version=latest
+        :target: https://pact-testgen.readthedocs.io/en/latest/?version=latest
+        :alt: Documentation Status
+
+
+
+
+Generate Python test cases from Pact files, for easier provider verification.
+
+
+* Free software: MIT license
+* Documentation: https://pact-testgen.readthedocs.io.
+
+
+Features
+--------
+
+* TODO
+
+Credits
+-------
+
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
