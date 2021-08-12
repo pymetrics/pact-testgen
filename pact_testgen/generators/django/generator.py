@@ -2,7 +2,8 @@ import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from .models import TestCase
+from .models import TestFile
+
 
 path = os.path.dirname(__file__) + "/templates"
 print(path)
@@ -12,7 +13,8 @@ env = Environment(
 )
 
 
-def generate_tests(testCase: TestCase) -> str:
+def generate_tests(test_file: TestFile) -> str:
+    # TODO: Actually use the test_case
     method_names = ["method_1", "method_2"]
     case_name = "TestChris"
     methods = env.get_template("test_methods.jinja").render(method_names=method_names)

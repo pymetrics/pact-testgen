@@ -99,14 +99,14 @@ class Pact(BaseModel):
     provider: Pacticipant
 
 
-class TestMethod:
-    request: Request
-    response: Response
-    # TODO: Implement me!
+# Input to template function
+
+class TestCase(BaseModel):
+    provider_state_name: str
+    test_methods: List[Interaction]
 
 
-class TestCase:
+class TestFile(BaseModel):
     base_class: str
     import_path: str
-    # TODO: Implement me!
-    test_methods: List[TestMethod]
+    test_cases: List[TestCase]

@@ -4,6 +4,7 @@ import json
 import sys
 
 from generators.django.generator import generate_tests
+from .pact_testgen import convert_to_test_cases
 from models import Pact
 
 
@@ -14,18 +15,11 @@ def load_pact_file(path: str) -> Pact:
         return Pact(**pact)
 
 
-def generate_template(base_class: str, pact: Pact) -> str:
-    """ Converts the base class and Pact model into a template """
-    # TODO: replace this placeholder code
-    base_class_import_path, base_class = base_class.rsplit(".", 1)
-    template = generate_tests()
-    return template
-
-
 def run(base_class: str, pact_file: str):
     """ Loads the pact file, and writes thei generated template(s) to stdout """
     pact = load_pact_file(pact_file)
-    template = generate_template(base_class, pact)
+    test_file = convert_to_test_cases(pact)
+    template = generate_tests(test_file)
     print(template)
 
 

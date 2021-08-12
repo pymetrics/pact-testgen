@@ -2,7 +2,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict
 
-from .models import Pact, TestCase
+from .models import Pact, TestFile
 
 
 @dataclass
@@ -21,9 +21,9 @@ class Response:
 
 
 
-def convert_to_test_cases(Pact) -> TestCase:
+def convert_to_test_cases(Pact, base_class: str) -> TestFile:
     """
-    Given a Pact file, create TestCase representations
+    Given a Pact file, create TestFile representations
     according to the following:
 
 
@@ -32,5 +32,11 @@ def convert_to_test_cases(Pact) -> TestCase:
     - Each interaction for a given provider state name
       becomes a test method.
     """
+    base_class_import_path, base_class = base_class.rsplit(".", 1)
     # TODO: Implement me!
+    raise NotImplementedError()
+
+
+def verify_pact(pact_response, actual_response):
+    # TODO:
     raise NotImplementedError()
