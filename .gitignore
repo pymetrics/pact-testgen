@@ -103,3 +103,9 @@ ENV/
 
 # IDE settings
 .vscode/
+
+# Testing folder
+sandbox/
+
+# Vim swap files
+.*.sw*
