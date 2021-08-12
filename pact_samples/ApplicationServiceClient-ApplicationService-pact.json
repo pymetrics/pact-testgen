@@ -69,6 +69,29 @@
     {
       "providerStates": [
         {
+          "name": "ApplicationTemplate ID 1 does not exist",
+          "params": {
+            "id": 1
+          }
+        }
+      ],
+      "description": "a request for ApplicationTemplate:1",
+      "request": {
+        "method": "GET",
+        "path": "/v1/applicationTemplates/1/"
+      },
+      "response": {
+        "status": 404,
+        "body": {
+          "code": 404,
+          "errorType": "Http404",
+          "errorMessage": "Not found."
+        }
+      }
+    },
+    {
+      "providerStates": [
+        {
           "name": "ApplicationTemplate ID 1 exists",
           "params": {
             "id": 1
@@ -82,6 +105,114 @@
       },
       "response": {
         "status": 204
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "ApplicationTemplate ID 1 exists",
+          "params": {
+            "id": 1
+          }
+        },
+        {
+          "name": "ApplicationTemplate ID 2 exists",
+          "params": {
+            "id": 2
+          }
+        }
+      ],
+      "description": "a request for ApplicationTemplate ID 1",
+      "request": {
+        "method": "GET",
+        "path": "/v1/applicationTemplates/",
+        "query": {
+          "id__in": [
+            "[1, 2]"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "id": 1,
+            "uuid": "f85d6e0a-3dfb-421e-9510-5c06443627fb",
+            "display_name": "Application:1",
+            "unique_id": "123",
+            "intro_text": "intro text",
+            "config": {},
+            "steps": [
+              {
+                "id": 1,
+                "order": "1",
+                "type": "GS",
+                "display_name": "An application step",
+                "config": {},
+                "links": {
+                  "something": "http://applications/foo/1/"
+                }
+              }
+            ],
+            "links": {
+              "foo": "http://applications/foo/1/"
+            }
+          }
+        ],
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.steps": {
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "Application ID 1 exists",
+          "params": {
+            "id": 1
+          }
+        }
+      ],
+      "description": "a request for application ID 1",
+      "request": {
+        "method": "GET",
+        "path": "/v1/applications/1/"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "uuid": "f85d6e0a-3dfb-421e-9510-5c06443627fb",
+          "display_name": "Application:1"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        }
       }
     }
   ],
