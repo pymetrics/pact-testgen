@@ -11,6 +11,7 @@ class Pacticipant(BaseModel):
 class Match(Enum):
     regex = "regex"
     type = "type"
+    equality = "equality"
 
 
 class Matcher(BaseModel):
@@ -72,12 +73,12 @@ class Request(BaseModel):
 class Response(BaseModel):
     body: Optional[Any]
     headers: Optional[Headers]
+    matchingRules: Optional[MatchingRule]
     status: conint(ge=100, le=599)
 
 
 class Interaction(BaseModel):
     description: str
-    matchingRules: Optional[List[MatchingRule]]
     providerStates: List[ProviderState]
     request: Request
     response: Response
