@@ -214,6 +214,51 @@
           }
         }
       }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "Application ID 1 exists",
+          "params": {}
+        }
+      ],
+      "description": "a request to update application ID 1",
+      "request": {
+        "method": "PATCH",
+        "path": "/v1/applications/1/",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "display_name": "ApplicationUpdated"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "uuid": "f85d6e0a-3dfb-421e-9510-5c06443627fb",
+          "display_name": "ApplicationUpdated"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.display_name": {
+              "matchers": [
+                {
+                  "match": "equality"
+                }
+              ]
+            }
+          }
+        }
+      }
     }
   ],
   "metadata": {
