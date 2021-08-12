@@ -31,7 +31,7 @@ setup(
     description="Generate Python test cases from Pact files, for easier provider verification.",
     entry_points={
         'console_scripts': [
-            'pact_testgen=pact_testgen.cli:main',
+            'pact-testgen=pact_testgen.cli:main',
         ],
     },
     install_requires=requirements,
