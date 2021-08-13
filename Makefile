@@ -50,10 +50,13 @@ clean-test: ## remove test and coverage artifacts
 lint: ## check style with flake8
 	flake8 pact_testgen tests
 
-test: ## run tests quickly with the default Python
+test-client: ## Run test_app client tests to generate a sample Pact file
+	./test_app/run_client_tests
+
+test: test-client ## run tests quickly with the default Python
 	pytest
 
-test-all: ## run tests on every Python version with tox
+test-all: test-client ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
