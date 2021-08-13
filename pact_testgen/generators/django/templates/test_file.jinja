@@ -1,7 +1,8 @@
+from {{file.import_path}} import {{file.base_class}}
+
 from pact_testgen.models import Response as PactResponse
 from pact_testgen.utils import Response
-
-from {{file.import_path}} import {{file.base_class}}
+from pact_testgen.verify import verify_response
 
 {% for case in cases %}
 {{case}}
