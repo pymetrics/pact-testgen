@@ -2,7 +2,7 @@ import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from .models import TestFile
+from pact_testgen.models import TestFile
 
 
 path = os.path.dirname(__file__) + "/templates"
