@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Iterable
 
 from pydantic import BaseModel, Extra, conint
 
@@ -102,7 +102,7 @@ class Pact(BaseModel):
 # Input to template function
 
 class TestCase(BaseModel):
-    provider_state_name: str
+    provider_state_names: Iterable[str]
     test_methods: List[Interaction]
 
 

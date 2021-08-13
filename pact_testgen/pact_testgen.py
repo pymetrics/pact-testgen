@@ -34,17 +34,17 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
     """
     base_class_import_path, base_class = base_class.rsplit(".", 1)
 
-    provider_state_interactions = defaultdict(list)
+    provider_states_interactions = defaultdict(list)
 
     for interaction in pact.interactions:
-        for provider_state in interaction.providerStates:
-            provider_state_interactions[provider_state.name].append(interaction)
+        provider_state_names = frozenset([ps.name for ps in interaction.providerStates])
+        provider_states_interactions[provider_state_names].append(interaction)
 
     cases = []
 
-    for provider_state_name, interactions in provider_state_interactions.items():
+    for provider_state_names, interactions in provider_states_interactions.items():
         cases.append(
-            TestCase(provider_state_name=provider_state_name, test_methods=interactions)
+            TestCase(provider_state_names=provider_state_names, test_methods=interactions)
         )
 
     return TestFile(
