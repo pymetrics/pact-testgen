@@ -5,7 +5,7 @@
             {{arg.request.path}},
             {{arg.request.data}}
         )
-        actual_response = Response.from_django_response(raw_actual_response)
+        actual = Response.from_django_response(raw_actual_response)
 
         raw_expected_response = {{arg.expectation}}
         expected = PactResponse(**raw_expected_response)
