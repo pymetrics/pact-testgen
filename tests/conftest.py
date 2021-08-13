@@ -5,6 +5,8 @@ from typing import Any, Dict
 import pytest
 
 from pact_testgen.models import Pact
+from pact_testgen.pact_testgen import convert_to_test_cases
+
 
 PROJECT_ROOT = Path(__file__).parent.parent.absolute()
 
@@ -38,3 +40,8 @@ def pact(pactfile) -> Pact:
     A sample Pact file, as a Pact object.
     """
     return Pact.parse_raw(pactfile)
+
+
+@pytest.fixture
+def testfile(pact):
+    return convert_to_test_cases(pact)
