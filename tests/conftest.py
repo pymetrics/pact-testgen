@@ -16,8 +16,9 @@ def pactfile() -> str:
     """
     with open(
         PROJECT_ROOT
-        / "pact_samples"
-        / "ApplicationServiceClient-ApplicationService-pact.json",
+        / "test_app"
+        / "pactfiles"
+        / "LibraryClient-Library-pact.json",
         "r",
     ) as f:
         return f.read()
