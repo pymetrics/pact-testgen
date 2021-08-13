@@ -5,6 +5,6 @@
             {{arg.request.path}},
             {{arg.request.data}}
         )
-        expected = {{arg.expectation}
+        expected = {{arg.expectation}}
         verify_pact(expected, actual)
     {% endfor %}
