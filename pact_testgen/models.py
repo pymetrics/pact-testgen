@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, List, Optional, Iterable
+from typing import Any, Dict, List, Literal, Optional, Iterable
 
 from pydantic import BaseModel, Extra, conint
 
@@ -8,14 +8,8 @@ class Pacticipant(BaseModel):
     name: str
 
 
-class Match(Enum):
-    regex = "regex"
-    type = "type"
-    equality = "equality"
-
-
 class Matcher(BaseModel):
-    match: Match
+    match: Literal["equality", "regex", "type"]
     max: Optional[int]
     min: Optional[int]
     regex: Optional[str]
