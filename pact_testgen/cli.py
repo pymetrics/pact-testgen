@@ -2,6 +2,7 @@
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from pact_testgen.generators.django.generator import generate_tests
 from pact_testgen.pact_testgen import convert_to_test_cases
@@ -10,7 +11,7 @@ from pact_testgen.models import Pact
 
 def load_pact_file(path: str) -> Pact:
     """ Loads the file at the supplied path into a Pact model """
-    with open(path, "r") as f:
+    with open(Path(path), "r") as f:
         pact = json.load(f)
         return Pact(**pact)
 
@@ -18,7 +19,7 @@ def load_pact_file(path: str) -> Pact:
 def run(base_class: str, pact_file: str):
     """ Loads the pact file, and writes thei generated template(s) to stdout """
     pact = load_pact_file(pact_file)
-    test_file = convert_to_test_cases(pact)
+    test_file = convert_to_test_cases(pact, base_class)
     template = generate_tests(test_file)
     print(template)
 
@@ -35,12 +36,15 @@ def main():
             "will subclass."
         ),
     )
+    parser.add_argument("--debug", action="store_true")
     # Reserve -b for Pact Broker support
     args = parser.parse_args()
     try:
         run(base_class=args.base_class, pact_file=args.pact_file)
         return 0
     except Exception as e:
+        if args.debug:
+            raise
         print(f"An error occurred: {e}", file=sys.stderr)
         return 1
 
