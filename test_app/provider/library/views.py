@@ -53,7 +53,8 @@ def get_or_update_author(request, author_id):
         author.save()
         return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict())
     elif request.method == "DELETE":
-        Author.objects.delete(id=author_id)
+        author = get_object_or_404(Author, id=author_id)
+        author.delete()
         return HttpResponse(status_code=204)
     elif request.method == "GET":
         author = get_object_or_404(Author, id=author_id)

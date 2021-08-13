@@ -98,9 +98,9 @@ class Test_an_author_with_id_1(TestCase):
 
 class Test_a_book_exists_with_author_id_1_an_author_with_id_1(TestCase):
 
-    def setUp():
+    def setUp(self):
         author = Author.objects.create(id=1, name="Douglas Adams")
-        book = Book.objects.create(id=1, title="Hitchiker's Guide to the Galaxy")
+        book = Book.objects.create(id=1, title="Hitchiker's Guide to the Galaxy", author=author)
 
     def test_test_a_book_search_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
