@@ -18,7 +18,7 @@ def verify_response(
     """
     pactman_pact = create_pactman_pact(consumer_name, provider_name)
     result = result_factory()
-    verifier = ResponseVerifier(pactman_pact, pact_response, result)
+    verifier = ResponseVerifier(pactman_pact, pact_response.dict(exclude_none=True), result)
     return verifier.verify(actual_response)
 
 
