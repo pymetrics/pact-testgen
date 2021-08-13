@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """The setup script."""
-
+import sys
 from setuptools import setup, find_packages
 
 with open('README.rst') as readme_file:
@@ -11,6 +11,10 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = ['jinja2', 'pydantic', 'pactman', 'python-slugify']
+
+# Install typing_extensions on Python 3.7
+if sys.version_info < (3, 8):
+    requirements.append("typing-extensions")
 
 test_requirements = ['pytest>=3', ]
 

@@ -1,5 +1,9 @@
 from enum import Enum
-from typing import Any, Dict, List, Literal, Optional, Iterable
+from typing import Any, Dict, List, Optional, Iterable
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
 
 from pydantic import BaseModel, Extra, conint
 
