@@ -1,0 +1,195 @@
+{
+  "consumer": {
+    "name": "LibraryClient"
+  },
+  "provider": {
+    "name": "Library"
+  },
+  "interactions": [
+    {
+      "providerStates": [
+        {
+          "name": "Nothing",
+          "params": {}
+        }
+      ],
+      "description": "An author creation request",
+      "request": {
+        "method": "POST",
+        "path": "/authors",
+        "body": {
+          "name": "Neal Stephenson"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "name": "Neal Stephenson",
+          "id": 1
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "Author ID 1 exists",
+          "params": {}
+        }
+      ],
+      "description": "A request for author ID 1",
+      "request": {
+        "method": "GET",
+        "path": "/authors/1"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 1,
+          "name": "Blake Crouch"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "An Author with ID 1",
+          "params": {}
+        }
+      ],
+      "description": "An author update request",
+      "request": {
+        "method": "PATCH",
+        "path": "/authors/1",
+        "body": {
+          "name": "Helene Wecker"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "name": "Helene Wecker",
+          "id": 1
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "An Author with ID 1",
+          "params": {}
+        }
+      ],
+      "description": "An author deletion request",
+      "request": {
+        "method": "DELETE",
+        "path": "/authors/1"
+      },
+      "response": {
+        "status": 204
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "Nothing",
+          "params": {}
+        }
+      ],
+      "description": "A book search request for a non-existent author",
+      "request": {
+        "method": "GET",
+        "path": "/books",
+        "query": {
+          "authorId": [
+            "100"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": []
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "An Author with ID 1",
+          "params": {}
+        },
+        {
+          "name": "A Book exists with author ID 1",
+          "params": {}
+        }
+      ],
+      "description": "A book search request for author ID 1",
+      "request": {
+        "method": "GET",
+        "path": "/books",
+        "query": {
+          "authorId": [
+            "1"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": [
+          {
+            "id": 1,
+            "title": "Dune"
+          }
+        ],
+        "matchingRules": {
+          "body": {
+            "$": {
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  }
+}
