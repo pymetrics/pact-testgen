@@ -29,7 +29,7 @@ def _build_request_args(interaction: Interaction) -> TestMethodArgs:
     request_args = RequestArgs(
         method=interaction.request.method.value,
         path=interaction.request.path,
-        data=interaction.request.body.json() if interaction.request.body else None,
+        data=interaction.request.body.json() if interaction.request.body else "",
     )
 
     test_method_args = TestMethodArgs(
