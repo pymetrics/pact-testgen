@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+pact-testgen pactfiles/LibraryClient-Library-pact.json > provider/tests/test_pact.py --debug
