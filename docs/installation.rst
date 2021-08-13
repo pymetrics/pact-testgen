@@ -12,7 +12,7 @@ To install Pact Test Generator, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install pact_testgen
+    $ pip install pact-testgen
 
 This is the preferred method to install Pact Test Generator, as it will always install the most recent stable release.
 
@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/chrislawlor/pact_testgen
+    $ git clone git://github.com/pymetrics/pact-testgen
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/chrislawlor/pact_testgen/tarball/master
+    $ curl -OJL https://github.com/pymetrics/pact-testgen/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
