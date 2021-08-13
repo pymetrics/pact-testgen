@@ -4,7 +4,7 @@ from pactman.verifier.verify import ResponseVerifier
 
 from pact_testgen.models import (
     Pact,
-    PactResponse,
+    Response as PactResponse,
 )
 from pact_testgen.utils import Response
 

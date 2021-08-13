@@ -19,7 +19,7 @@ def generate_tests(test_file: TestFile) -> str:
         case_name = _get_test_class_name(test_case)
 
         for method in test_case.test_methods:
-            args.append(_build_request_args(method))
+            args.append(_build_method_args(method))
 
         methods = env.get_template("test_methods.jinja").render(args=args)
         case = env.get_template("test_case.jinja").render(
@@ -27,11 +27,13 @@ def generate_tests(test_file: TestFile) -> str:
         )
         cases.append(case)
 
-    all_tests = "\n\n".join(cases)
+    all_tests = env.get_template("test_file.jinja").render(
+        file=test_file, cases=cases
+    )
     return all_tests
 
 
-def _build_request_args(interaction: Interaction) -> TestMethodArgs:
+def _build_method_args(interaction: Interaction) -> TestMethodArgs:
     request_args = RequestArgs(
         method=interaction.request.method.value,
         path=interaction.request.path,

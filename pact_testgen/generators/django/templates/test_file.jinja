@@ -1,0 +1,8 @@
+from pact_testgen.models import Response as PactResponse
+from pact_testgen.utils import Response
+
+from {{file.import_path}} import {{file.base_class}}
+
+{% for case in cases %}
+{{case}}
+{% endfor %}
