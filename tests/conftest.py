@@ -32,8 +32,8 @@ def pactfile_dict(pactfile) -> Dict[str, Any]:
 
 
 @pytest.fixture
-def pact_model(pactfile_dict) -> Pact:
+def pact(pactfile) -> Pact:
     """
     A sample Pact file, as a Pact object.
     """
-    return Pact.parse_obj(pactfile)
+    return Pact.parse_raw(pactfile)

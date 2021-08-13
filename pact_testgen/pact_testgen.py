@@ -1,8 +1,9 @@
 """Main module."""
+from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Dict
 
-from .models import Pact, TestFile
+from .models import Pact, TestFile, TestCase
 
 
 @dataclass
@@ -16,7 +17,7 @@ class Response:
         return cls(
             text=response.content,
             headers=dict(response.headers),
-            status_code=response.status_code
+            status_code=response.status_code,
         )
 
 
@@ -32,8 +33,23 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
       becomes a test method.
     """
     base_class_import_path, base_class = base_class.rsplit(".", 1)
-    # TODO: Implement me!
-    raise NotImplementedError()
+
+    provider_state_interactions = defaultdict(list)
+
+    for interaction in pact.interactions:
+        for provider_state in interaction.providerStates:
+            provider_state_interactions[provider_state.name].append(interaction)
+
+    cases = []
+
+    for provider_state_name, interactions in provider_state_interactions.items():
+        cases.append(
+            TestCase(provider_state_name=provider_state_name, test_methods=interactions)
+        )
+
+    return TestFile(
+        base_class=base_class, import_path=base_class_import_path, test_cases=cases
+    )
 
 
 def verify_pact(pact_response, actual_response):
