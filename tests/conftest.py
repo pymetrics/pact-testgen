@@ -44,4 +44,4 @@ def pact(pactfile) -> Pact:
 
 @pytest.fixture
 def testfile(pact):
-    return convert_to_test_cases(pact)
+    return convert_to_test_cases(pact, base_class="django.test.TestCase")
