@@ -7,7 +7,6 @@ from pact_testgen.models import Pact, TestFile
 from pact_testgen.pact_testgen import convert_to_test_cases
 
 
-
 def test_parse_pactfile(pactfile_dict):
     pact = Pact.parse_obj(pactfile_dict)
 
