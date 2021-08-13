@@ -2,26 +2,21 @@
 
 """Tests for `pact_testgen` package."""
 
-import pytest
 
 from pact_testgen.models import Pact
 
 
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
+def test_parse_pactfile(pactfile_dict):
+    pact = Pact.parse_obj(pactfile_dict)
 
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+    assert len(pact.interactions) == len(pactfile_dict["interactions"])
+    assert pact.consumer.name
+    assert pact.provider.name
+    assert pact.metadata.pactSpecification
 
-
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
-
-
-def test_parse_pactfile(pactfile):
-    Pact.parse_raw(pactfile)
+    assert len(pact.interactions) > 1
+    for interaction in pact.interactions:
+        assert interaction.providerStates
+        assert interaction.description
+        assert interaction.request
+        assert interaction.response
