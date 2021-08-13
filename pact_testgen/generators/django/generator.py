@@ -1,9 +1,10 @@
 import json
 import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from slugify import slugify
 
 from pact_testgen.generators.models import RequestArgs, TestMethodArgs
-from pact_testgen.models import TestFile, Interaction
+from pact_testgen.models import Interaction, TestCase, TestFile
 
 path = os.path.dirname(__file__) + "/templates"
 env = Environment(
@@ -12,22 +13,22 @@ env = Environment(
 
 
 def generate_tests(test_file: TestFile) -> str:
-    # TODO: Actually use the test_case
-    method_names = ["method_1", "method_2"]
-    case_name = "TestChris"
-    expected_body = {"key1": "val1", "key2": {"nested_key1": "val2"}}
-    args = []
-    for case in test_file.test_cases:
-        for method in case.test_methods:
-            args.append(_build_request_args(method))
-    methods = env.get_template("test_methods.jinja").render(
-        method_names=method_names, expected_body=expected_body
-    )
-    case = env.get_template("test_case.jinja").render(
-        case_name=case_name, file=test_file, methods=methods
-    )
+    cases = []
+    for test_case in test_file.test_cases:
+        args = []
+        case_name = _get_test_class_name(test_case)
 
-    return case
+        for method in test_case.test_methods:
+            args.append(_build_request_args(method))
+
+        methods = env.get_template("test_methods.jinja").render(args=args)
+        case = env.get_template("test_case.jinja").render(
+            case_name=case_name, file=test_file, methods=methods
+        )
+        cases.append(case)
+
+    all_tests = "\n\n".join(cases)
+    return all_tests
 
 
 def _build_request_args(interaction: Interaction) -> TestMethodArgs:
@@ -40,9 +41,21 @@ def _build_request_args(interaction: Interaction) -> TestMethodArgs:
     )
 
     test_method_args = TestMethodArgs(
-        name=interaction.description,
+        name=_get_test_method_name(interaction),
         expectation=repr(interaction.response.dict()),
         request=request_args,
     )
 
     return test_method_args
+
+
+def _get_test_class_name(test_case: TestCase) -> str:
+    provider_slugs = [
+        slugify(x).replace("-", "_") for x in test_case.provider_state_names
+    ]
+    return "Test_{}".format("_".join(provider_slugs))
+
+
+def _get_test_method_name(interaction: Interaction) -> str:
+    description_slug = slugify(interaction.description).replace("-", "_")
+    return "test_{}".format(description_slug)

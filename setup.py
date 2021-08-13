@@ -10,7 +10,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['jinja2', 'pydantic', 'pactman']
+requirements = ['jinja2', 'pydantic', 'pactman', 'python-slugify']
 
 test_requirements = ['pytest>=3', ]
 
