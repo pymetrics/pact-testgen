@@ -20,8 +20,7 @@ class Response:
         )
 
 
-
-def convert_to_test_cases(Pact, base_class: str) -> TestFile:
+def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
     """
     Given a Pact file, create TestFile representations
     according to the following:

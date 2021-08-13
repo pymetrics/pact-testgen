@@ -4,8 +4,7 @@
 
 import pytest
 
-
-from pact_testgen import pact_testgen
+from pact_testgen.models import Pact
 
 
 @pytest.fixture
@@ -22,3 +21,7 @@ def test_content(response):
     """Sample pytest test function with the pytest fixture as an argument."""
     # from bs4 import BeautifulSoup
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
+
+
+def test_parse_pactfile(pactfile):
+    Pact.parse_raw(pactfile)
