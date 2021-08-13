@@ -1,2 +1,3 @@
 requests
 pactman
+django>=3.2
