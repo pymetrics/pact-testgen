@@ -2,15 +2,13 @@ from pactman.mock.pact import Pact as PactmanPact
 from pactman.verifer.result import LoggedResult, Result
 from pactman.verifier.verify import ResponseVerifier
 
-from pact_testgen.models import (
-    Pact,
-    Response as PactResponse,
-)
+from pact_testgen.models import Response as PactResponse
 from pact_testgen.utils import Response
 
 
 def verify_response(
-    pact: Pact,
+    consumer_name: str,
+    provider_name: str,
     pact_response: PactResponse,
     actual_response: Response,
 ) -> bool:
@@ -18,22 +16,21 @@ def verify_response(
     Returns whether the actual response received from the API matches
     the contract specified in the supplied pact
     """
-    pactman_pact = create_pactmanpact_from_pact(pact)
+    pactman_pact = create_pactman_pact(consumer_name, provider_name)
     result = result_factory()
     verifier = ResponseVerifier(pactman_pact, pact_response, result)
     return verifier.verify(actual_response)
 
 
-def create_pactmanpact_from_pact(pact: Pact) -> PactmanPact:
+def create_pactman_pact(consumer_name: str, provider_name: str) -> PactmanPact:
     """
-    Creates a real Pactman Pact out of a Pact pydantic model
+    Creates a real Pactman Pact given the consumer and provider names
     """
     # TODO: Do we need to set any of the additional fields?
     # host_name, port, pact_dir, use_mocking_server
-    return PactmanPact(
-        pact["consumer"],
-        pact["provider"],
-    )
+    consumer = {"name": consumer_name}
+    provider = {"name": provider_name}
+    return PactmanPact(consumer, provider)
 
 
 def result_factory() -> Result:

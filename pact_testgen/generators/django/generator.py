@@ -14,6 +14,9 @@ env = Environment(
 
 def generate_tests(test_file: TestFile) -> str:
     cases = []
+    consumer_name = test_file.consumer.name
+    provider_name = test_file.provider.name
+
     for test_case in test_file.test_cases:
         args = []
         case_name = _get_test_class_name(test_case)
@@ -21,7 +24,9 @@ def generate_tests(test_file: TestFile) -> str:
         for method in test_case.test_methods:
             args.append(_build_method_args(method))
 
-        methods = env.get_template("test_methods.jinja").render(args=args)
+        methods = env.get_template("test_methods.jinja").render(
+            args=args, consumer_name=consumer_name, provider_name=provider_name
+        )
         case = env.get_template("test_case.jinja").render(
             case_name=case_name, file=test_file, methods=methods
         )

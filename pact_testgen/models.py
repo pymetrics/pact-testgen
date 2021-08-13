@@ -102,5 +102,7 @@ class TestCase(BaseModel):
 
 class TestFile(BaseModel):
     base_class: str
+    consumer: Pacticipant
     import_path: str
+    provider: Pacticipant
     test_cases: List[TestCase]

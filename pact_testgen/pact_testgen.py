@@ -40,6 +40,8 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
 
     return TestFile(
         base_class=base_class,
+        consumer=pact.consumer,
         import_path=base_class_import_path,
+        provider=pact.provider,
         test_cases=cases,
     )

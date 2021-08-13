@@ -10,5 +10,6 @@
         raw_expected_response = {{arg.expectation}}
         expected = PactResponse(**raw_expected_response)
 
-        verify_response(expected, actual)
+        success = verify_response("{{consumer_name}}", "{{provider_name}}", expected, actual)
+        self.assertTrue(success)
     {% endfor %}
