@@ -1,7 +1,7 @@
 """Main module."""
 from collections import defaultdict
 
-from .models import Pact, TestCase, TestFile
+from pact_testgen.models import Pact, TestCase, TestFile
 
 
 def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:

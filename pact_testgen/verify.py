@@ -2,11 +2,11 @@ from pactman.mock.pact import Pact as PactmanPact
 from pactman.verifer.result import LoggedResult, Result
 from pactman.verifier.verify import ResponseVerifier
 
-from .models import (
+from pact_testgen.models import (
     Pact,
     PactResponse,
 )
-from .utils import Response
+from pact_testgen.utils import Response
 
 
 def verify_response(
