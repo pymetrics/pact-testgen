@@ -3,9 +3,9 @@ import argparse
 import json
 import sys
 
-from generators.django.generator import generate_tests
+from .generators.django.generator import generate_tests
 from .pact_testgen import convert_to_test_cases
-from models import Pact
+from .models import Pact
 
 
 def load_pact_file(path: str) -> Pact:
