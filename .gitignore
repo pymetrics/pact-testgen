@@ -109,3 +109,6 @@ sandbox/
 
 # Vim swap files
 .*.sw*
+
+# Databases
+**/*.sqlite3
