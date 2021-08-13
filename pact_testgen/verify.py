@@ -1,5 +1,5 @@
 from pactman.mock.pact import Pact as PactmanPact
-from pactman.verifer.result import LoggedResult, Result
+from pactman.verifier.result import LoggedResult, Result
 from pactman.verifier.verify import ResponseVerifier
 
 from pact_testgen.models import Response as PactResponse
