@@ -51,7 +51,10 @@ lint: ## check style with flake8
 	flake8 pact_testgen tests
 
 test-client: ## Run test_app client tests to generate a sample Pact file
-	./test_app/run_client_tests
+	cd test_app && pytest client_tests.py
+
+test-provider:  ## Run test_app provider test suite
+	cd test_app/provider && python manage.py test
 
 test: test-client ## run tests quickly with the default Python
 	pytest
