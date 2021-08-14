@@ -21,10 +21,7 @@ def verify_response(
     pactman_pact = create_pactman_pact(consumer_name, provider_name, version)
     result = result_factory()
     verifier = ResponseVerifier(pactman_pact, pact_response.dict(exclude_none=True), result)
-    success =  verifier.verify(actual_response)
-    if not success:
-        breakpoint()
-    return success
+    return verifier.verify(actual_response)
 
 
 def create_pactman_pact(consumer_name: str, provider_name: str, version: str) -> PactmanPact:
