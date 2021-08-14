@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-pytest $(dirname $(realpath $0))/client_tests.py
+# This is silly, but MacOS doesn't have realpath
+HERE=(`python -c "import os, sys; print(os.path.dirname(os.path.abspath('$0')))"`)
+
+pytest $HERE/client_tests.py
