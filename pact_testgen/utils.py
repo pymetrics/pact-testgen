@@ -15,3 +15,18 @@ class Response:
             headers=dict(response.headers),
             status_code=response.status_code,
         )
+
+
+def to_camel_case(value: str) -> str:
+    words = []
+    split_on = {" ", "_", "-"}
+    word = ""
+    for char in value:
+        if char in split_on:
+            if word:
+                words.append(word.capitalize())
+            word = ""
+        else:
+            word += char
+
+    return "".join(words)

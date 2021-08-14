@@ -1,6 +1,9 @@
-class {{case_name}}({{file.base_class}}):
+class {{class_name}}({{file.base_class}}):
 
     def setUp(self):
-        # TODO: Implement me!
+        # TODO: Implement the following:
+        {% for name in ps_names %}
+        #  - {{ name }}
+        {% endfor %}
         pass
     {{methods}}

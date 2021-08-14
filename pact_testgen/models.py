@@ -6,6 +6,7 @@ except ImportError:
     from typing_extensions import Literal
 
 from pydantic import BaseModel, Extra, conint
+from pact_testgen.utils import to_camel_case
 
 
 class Pacticipant(BaseModel):
@@ -102,7 +103,6 @@ class Pact(BaseModel):
 class TestCase(BaseModel):
     provider_state_names: Iterable[str]
     test_methods: List[Interaction]
-
 
 class TestFile(BaseModel):
     base_class: str
