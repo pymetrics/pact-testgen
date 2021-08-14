@@ -55,7 +55,7 @@ def get_or_update_author(request, author_id):
     elif request.method == "DELETE":
         author = get_object_or_404(Author, id=author_id)
         author.delete()
-        return HttpResponse(status_code=204)
+        return HttpResponse(status=204)
     elif request.method == "GET":
         author = get_object_or_404(Author, id=author_id)
         return JsonResponse(
