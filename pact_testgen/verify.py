@@ -11,18 +11,23 @@ def verify_response(
     provider_name: str,
     pact_response: PactResponse,
     actual_response: Response,
+    version: str = "3.0.0",
 ) -> bool:
     """
     Returns whether the actual response received from the API matches
     the contract specified in the supplied pact
     """
-    pactman_pact = create_pactman_pact(consumer_name, provider_name)
+    # TODO: Get version from the actual Pactfile
+    pactman_pact = create_pactman_pact(consumer_name, provider_name, version)
     result = result_factory()
     verifier = ResponseVerifier(pactman_pact, pact_response.dict(exclude_none=True), result)
-    return verifier.verify(actual_response)
+    success =  verifier.verify(actual_response)
+    if not success:
+        breakpoint()
+    return success
 
 
-def create_pactman_pact(consumer_name: str, provider_name: str) -> PactmanPact:
+def create_pactman_pact(consumer_name: str, provider_name: str, version: str) -> PactmanPact:
     """
     Creates a real Pactman Pact given the consumer and provider names
     """
@@ -30,7 +35,7 @@ def create_pactman_pact(consumer_name: str, provider_name: str) -> PactmanPact:
     # host_name, port, pact_dir, use_mocking_server
     consumer = {"name": consumer_name}
     provider = {"name": provider_name}
-    return PactmanPact(consumer, provider)
+    return PactmanPact(consumer, provider, version=version)
 
 
 def result_factory() -> Result:
