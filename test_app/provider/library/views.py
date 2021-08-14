@@ -2,14 +2,10 @@ import json
 from typing import Any, Dict, List, Type, Union
 
 from django.core.exceptions import BadRequest
-from django.http import (
-    HttpRequest,
-    HttpResponse,
-    HttpResponseNotAllowed,
-    JsonResponse,
-)
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed, JsonResponse
 from django.http.response import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from library.models import Author, Book
 from pydantic import BaseModel, ValidationError
 
@@ -31,22 +27,19 @@ class BookSerializer(BaseModel):
 
 
 def to_pydantic_model(model: Type[BaseModel], request: HttpRequest):
-    try:
-        return model.parse_raw(request.body)
-    except ValidationError as ve:
-        raise BadRequest(str(ve))
+    return model.parse_raw(request.body)
 
-
+@csrf_exempt
 def create_author(request):
     if request.method == "POST":
         author_request = to_pydantic_model(AuthorCreateUpdateRequest, request)
         author = Author.objects.create(name=author_request.name)
-        return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict())
+        return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict(), status=201)
     return HttpResponseNotAllowed(permitted_methods=["POST"])
 
-
+@csrf_exempt
 def get_or_update_author(request, author_id):
-    if request.method == "PATCH":
+    if request.method == "PATCH" or request.method == "POST":
         update_request = to_pydantic_model(AuthorCreateUpdateRequest, request)
         author = get_object_or_404(Author, id=author_id)
         author.name = update_request.name
@@ -58,9 +51,7 @@ def get_or_update_author(request, author_id):
         return HttpResponse(status=204)
     elif request.method == "GET":
         author = get_object_or_404(Author, id=author_id)
-        return JsonResponse(
-            AuthorSerializer(id=author.id, name=author.name).dict()
-        )
+        return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict())
 
     return HttpResponseNotAllowed(permitted_methods=["PATCH", "DELETE"])
 
@@ -75,5 +66,6 @@ def search_books(request):
         books = books.filter(author_id=author_id)
 
     return JsonResponse(
-        [BookSerializer(title=book.title, id=book.id).dict() for book in books], safe=False
+        [BookSerializer(title=book.title, id=book.id).dict() for book in books],
+        safe=False,
     )

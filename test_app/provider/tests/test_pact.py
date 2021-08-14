@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase
 
 from pact_testgen.models import Response as PactResponse
@@ -17,7 +18,7 @@ class Test_nothing(TestCase):
         raw_actual_response = self.client.generic(
             "POST",
             "/authors",
-            {"name": "Neal Stephenson"}
+            json.dumps({"name": "Neal Stephenson"})
         )
         actual = Response.from_django_response(raw_actual_response)
 
@@ -68,10 +69,11 @@ class Test_an_author_with_id_1(TestCase):
         Author.objects.create(id=1, name="Douglas Adams")
 
     def test_test_an_author_update_request(self):
+        import json
         raw_actual_response = self.client.generic(
-            "PATCH",
+            "POST",
             "/authors/1",
-            {"name": "Helene Wecker"}
+            json.dumps({"name": "Helene Wecker"})
         )
         actual = Response.from_django_response(raw_actual_response)
 
@@ -79,6 +81,9 @@ class Test_an_author_with_id_1(TestCase):
         expected = PactResponse(**raw_expected_response)
 
         success = verify_response("LibraryClient", "Library", expected, actual)
+        if not success:
+            print(f"\ACTUAL_TEXT={actual.text}")
+            print(f"\nRAW_EXPECTED_RESP={raw_expected_response}")
         self.assertTrue(success)
 
     def test_test_an_author_deletion_request(self):
