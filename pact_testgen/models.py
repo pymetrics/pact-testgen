@@ -101,7 +101,7 @@ class Pact(BaseModel):
 # Input to template function
 
 class TestCase(BaseModel):
-    provider_state_names: Iterable[str]
+    provider_state_names: List[str]
     test_methods: List[Interaction]
 
 class TestFile(BaseModel):
