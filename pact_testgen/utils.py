@@ -36,4 +36,7 @@ def to_camel_case(value: str) -> str:
         else:
             word += char
 
+    if word:
+        words.append(word.capitalize())
+
     return "".join(words)
