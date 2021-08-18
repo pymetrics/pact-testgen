@@ -29,13 +29,17 @@ class BookSerializer(BaseModel):
 def to_pydantic_model(model: Type[BaseModel], request: HttpRequest):
     return model.parse_raw(request.body)
 
+
 @csrf_exempt
 def create_author(request):
     if request.method == "POST":
         author_request = to_pydantic_model(AuthorCreateUpdateRequest, request)
         author = Author.objects.create(name=author_request.name)
-        return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict(), status=201)
+        return JsonResponse(
+            AuthorSerializer(id=author.id, name=author.name).dict(), status=201
+        )
     return HttpResponseNotAllowed(permitted_methods=["POST"])
+
 
 @csrf_exempt
 def get_or_update_author(request, author_id):

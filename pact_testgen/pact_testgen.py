@@ -20,9 +20,7 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
     provider_states_interactions = defaultdict(list)
 
     for interaction in pact.interactions:
-        provider_state_names = frozenset(
-            [ps.name for ps in interaction.providerStates]
-        )
+        provider_state_names = frozenset([ps.name for ps in interaction.providerStates])
         provider_states_interactions[provider_state_names].append(interaction)
 
     cases = []

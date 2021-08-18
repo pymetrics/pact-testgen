@@ -17,10 +17,7 @@ def pactfile() -> str:
     A sample Pact file as a string.
     """
     with open(
-        PROJECT_ROOT
-        / "test_app"
-        / "pactfiles"
-        / "LibraryClient-Library-pact.json",
+        PROJECT_ROOT / "test_app" / "pactfiles" / "LibraryClient-Library-pact.json",
         "r",
     ) as f:
         return f.read()

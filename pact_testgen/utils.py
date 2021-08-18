@@ -8,6 +8,7 @@ class Response:
     """
     Requests-like Response class.
     """
+
     text: str
     headers: Dict[str, Any] = field(default_factory=dict)
     status_code: int = 200

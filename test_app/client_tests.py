@@ -78,7 +78,7 @@ def test_get_books_by_author_no_author(pact, library_client: LibraryClient):
     (
         pact.given("Nothing")
         .upon_receiving("A book search request for a non-existent author")
-        .with_request("GET", "/books", query={"authorId": ['100']})
+        .with_request("GET", "/books", query={"authorId": ["100"]})
         .will_respond_with(200, body=[])
     )
 
@@ -87,14 +87,12 @@ def test_get_books_by_author_no_author(pact, library_client: LibraryClient):
 
 
 def test_get_books_by_author_success(pact, library_client: LibraryClient):
-    expected = EachLike(
-        {"id": 1, "title": "Dune"}
-    )
+    expected = EachLike({"id": 1, "title": "Dune"})
     (
         pact.given("An Author with ID 1")
         .and_given("A Book exists with author ID 1")
         .upon_receiving("A book search request for author ID 1")
-        .with_request("GET", "/books", query={"authorId": ['1']})
+        .with_request("GET", "/books", query={"authorId": ["1"]})
         .will_respond_with(200, body=expected)
     )
 

@@ -27,10 +27,12 @@ class LibraryClient:
         return self.make_request("DELETE", f"/authors/{author_id}")
 
     def create_book(self, title: str, author_id):
-        return self.make_request("POST", "/books", json={"title": title, "author": author_id})
+        return self.make_request(
+            "POST", "/books", json={"title": title, "author": author_id}
+        )
 
     def get_book(self, book_id: int):
-        return self.make_request("GET",f"/books/{book_id}")
+        return self.make_request("GET", f"/books/{book_id}")
 
     def update_book(self, book_id, title: str):
         return self.make_request("PATCH", f"/books/{book_id}", json={"title": title})

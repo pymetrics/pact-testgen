@@ -79,11 +79,14 @@ Ready to contribute? Here's how to set up `pact_testgen` for local development.
 5. When you're done making changes, check that your changes pass flake8 and the
    tests, including testing other Python versions with tox::
 
-    $ flake8 pact_testgen tests
-    $ python setup.py test or pytest
-    $ tox
+    $ make lint
+    $ make format
+    $ make test
+    $ make tests
 
-   To get flake8 and tox, just pip install them into your virtualenv.
+   To get development dependencies, just pip install them into your virtualenv with ``pip install -r requirements_dev.txt``.
+
+   We recommend installing pre-commit_ to automatically run the linter + formatter
 
 6. Commit your changes and push your branch to GitHub::
 
@@ -126,3 +129,6 @@ $ git push
 $ git push --tags
 
 Travis will then deploy to PyPI if tests pass.
+
+
+.. _pre-commit: https://pre-commit.com/

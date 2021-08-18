@@ -10,14 +10,14 @@ from pact_testgen.models import Pact
 
 
 def load_pact_file(path: str) -> Pact:
-    """ Loads the file at the supplied path into a Pact model """
+    """Loads the file at the supplied path into a Pact model"""
     with open(Path(path), "r") as f:
         pact = json.load(f)
         return Pact(**pact)
 
 
 def run(base_class: str, pact_file: str):
-    """ Loads the pact file, and writes thei generated template(s) to stdout """
+    """Loads the pact file, and writes thei generated template(s) to stdout"""
     pact = load_pact_file(pact_file)
     test_file = convert_to_test_cases(pact, base_class)
     template = generate_tests(test_file)
@@ -32,8 +32,7 @@ def main():
         "--base-class",
         default="django.test.TestCase",
         help=(
-            "Python path to the TestCase which generated test cases "
-            "will subclass."
+            "Python path to the TestCase which generated test cases " "will subclass."
         ),
     )
     parser.add_argument("--debug", action="store_true")

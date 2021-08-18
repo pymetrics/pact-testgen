@@ -27,7 +27,7 @@ Features
 --------
 
 * Test Pact contracts against your Python providers via unit tests. Get test isolation *for free*.
-* `pact-testgen` creates test cases from your Pact files, with placeholders for defining provider states.
+* ``pact-testgen`` creates test cases from your Pact files, with placeholders for defining provider states.
 
 
 Credits

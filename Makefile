@@ -50,6 +50,9 @@ clean-test: ## remove test and coverage artifacts
 lint: ## check style with flake8
 	flake8 pact_testgen tests
 
+format: ## Run Black formatter
+	black .
+
 test-client: ## Run test_app client tests to generate a sample Pact file
 	cd test_app && pytest client_tests.py
 
