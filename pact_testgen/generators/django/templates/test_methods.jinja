@@ -1,5 +1,5 @@
     {% for arg in args %}
-    def test_{{arg.name}}(self):
+    def {{arg.name}}(self):
         raw_actual_response = self.client.generic(
             "{{arg.request.method}}",
             "{{arg.request.path}}",
