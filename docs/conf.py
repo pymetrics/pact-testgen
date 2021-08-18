@@ -48,7 +48,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "Pact Test Generator"
-copyright = "2021, Chris Lawlor"
+copyright = "2021, Pymetrics, Inc."
 author = "Chris Lawlor"
 
 # The version info for the project you're documenting, acts as replacement
