@@ -8,4 +8,4 @@ def test_django_test_generator_output_is_parsable(testfile):
     # by test_app/client_tests.py
     assert "TestAnAuthorWithId1Exists" in code_obj.co_names
     assert "TestABookExistsWithAuthorId1AnAuthorWithId1Exists" in code_obj.co_names
-    assert "TestNothing" in code_obj.names
+    assert "TestNothing" in code_obj.co_names

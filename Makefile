@@ -65,6 +65,9 @@ testgen: test-client  ## Run pact-testgen on test app contract to regenerate tes
 test: test-client ## run tests quickly with the default Python
 	pytest
 
+test-debug: test-client  ## Run tests, drop to debugger on failure
+	pytest --pdb
+
 test-all: test-client ## run tests on every Python version with tox
 	tox
 
