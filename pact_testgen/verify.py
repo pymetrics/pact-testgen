@@ -20,11 +20,15 @@ def verify_response(
     # TODO: Get version from the actual Pactfile
     pactman_pact = create_pactman_pact(consumer_name, provider_name, version)
     result = result_factory()
-    verifier = ResponseVerifier(pactman_pact, pact_response.dict(exclude_none=True), result)
+    verifier = ResponseVerifier(
+        pactman_pact, pact_response.dict(exclude_none=True), result
+    )
     return verifier.verify(actual_response)
 
 
-def create_pactman_pact(consumer_name: str, provider_name: str, version: str) -> PactmanPact:
+def create_pactman_pact(
+    consumer_name: str, provider_name: str, version: str
+) -> PactmanPact:
     """
     Creates a real Pactman Pact given the consumer and provider names
     """

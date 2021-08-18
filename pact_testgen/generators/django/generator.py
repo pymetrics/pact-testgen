@@ -30,7 +30,7 @@ def generate_tests(test_file: TestFile) -> str:
         )
 
         case = env.get_template("test_case.jinja").render(
-            ps_names = list(test_case.provider_state_names),
+            ps_names=list(test_case.provider_state_names),
             class_name=_get_test_class_name(test_case),
             file=test_file,
             methods=methods,
