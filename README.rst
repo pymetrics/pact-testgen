@@ -3,11 +3,11 @@ Pact Test Generator
 ===================
 
 
-.. image:: https://img.shields.io/pypi/v/pact_testgen.svg
-        :target: https://pypi.python.org/pypi/pact_testgen
+.. image:: https://img.shields.io/pypi/v/pact-testgen.svg
+        :target: https://pypi.python.org/pypi/pact-testgen
 
-.. image:: https://img.shields.io/travis/chrislawlor/pact_testgen.svg
-        :target: https://travis-ci.com/chrislawlor/pact_testgen
+.. image:: https://img.shields.io/travis/pymetrics/pact-testgen.svg
+        :target: https://travis-ci.com/pymetrics/pact-testgen
 
 .. image:: https://readthedocs.org/projects/pact-testgen/badge/?version=latest
         :target: https://pact-testgen.readthedocs.io/en/latest/?version=latest

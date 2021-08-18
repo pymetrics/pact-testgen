@@ -49,7 +49,7 @@ setup(
     packages=find_packages(include=["pact_testgen", "pact_testgen.*"]),
     test_suite="tests",
     tests_require=test_requirements,
-    url="https://github.com/chrislawlor/pact_testgen",
+    url="https://github.com/pymetrics/pact-testgen",
     version="0.1.0",
     zip_safe=False,
 )

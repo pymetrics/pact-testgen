@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/chrislawlor/pact_testgen
-.. _tarball: https://github.com/chrislawlor/pact_testgen/tarball/master
+.. _Github repo: https://github.com/pymetrics/pact-testgen
+.. _tarball: https://github.com/pymetrics/pact-testgen/tarball/master
