@@ -3,7 +3,7 @@
         raw_actual_response = self.client.generic(
             "{{arg.request.method}}",
             "{{arg.request.path}}",
-            json.dumps({{arg.request.data}})
+            {% if arg.request.data %}json.dumps({{arg.request.data}}){% endif %}
         )
         actual = Response.from_django_response(raw_actual_response)
 

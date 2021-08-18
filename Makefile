@@ -59,6 +59,9 @@ test-client: ## Run test_app client tests to generate a sample Pact file
 test-provider:  ## Run test_app provider test suite
 	cd test_app/provider && python manage.py test
 
+testgen: test-client  ## Run pact-testgen on test app contract to regenerate test files
+	cd test_app && ./run_pact_testgen
+
 test: test-client ## run tests quickly with the default Python
 	pytest
 
