@@ -1,14 +1,23 @@
 """Console script for pact_testgen."""
 import argparse
-
+import os
 import sys
 from pact_testgen.pact_testgen import run
+
+
+def directory(path: str):
+    if os.path.isdir(path):
+        return path
+    raise argparse.ArgumentError()
 
 
 def main():
     """Console script for pact_testgen."""
     parser = argparse.ArgumentParser()
     parser.add_argument("pact_file", help="Path to a Pact file.")
+    parser.add_argument(
+        "output_dir", help="Output for generated Python files.", type=directory
+    )
     parser.add_argument(
         "--base-class",
         default="django.test.TestCase",
