@@ -28,20 +28,30 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
     base_class_import_path, base_class = base_class.rsplit(".", 1)
 
     provider_states_interactions = defaultdict(list)
+    provider_state_name_set_order = {}
 
     for interaction in pact.interactions:
-        provider_state_names = frozenset([ps.name for ps in interaction.providerStates])
-        provider_states_interactions[provider_state_names].append(interaction)
+        ordered_provider_state_names = [ps.name for ps in interaction.providerStates]
+        # We need a hashable collection to key on, but also need to rememeber
+        # name order so that test case names are deterministic based on the
+        # order defined in the Pact contract.
+        provider_state_name_set = frozenset(ordered_provider_state_names)
+        provider_state_name_set_order[
+            provider_state_name_set
+        ] = ordered_provider_state_names
+        provider_states_interactions[provider_state_name_set].append(interaction)
 
     cases = []
 
     for (
-        provider_state_names,
+        provider_state_name_set,
         interactions,
     ) in provider_states_interactions.items():
         cases.append(
             TestCase(
-                provider_state_names=provider_state_names,
+                provider_state_names=provider_state_name_set_order[
+                    provider_state_name_set
+                ],
                 test_methods=interactions,
             )
         )
