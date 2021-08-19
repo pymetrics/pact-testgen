@@ -1,7 +1,17 @@
 """Main module."""
 from collections import defaultdict
 
+from pact_testgen.files import load_pact_file
+from pact_testgen.generators.django.generator import generate_tests
 from pact_testgen.models import Pact, TestCase, TestFile
+
+
+def run(base_class: str, pact_file: str):
+    """Loads the pact file, and writes thei generated template(s) to stdout"""
+    pact = load_pact_file(pact_file)
+    test_file = convert_to_test_cases(pact, base_class)
+    template = generate_tests(test_file)
+    print(template)
 
 
 def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:

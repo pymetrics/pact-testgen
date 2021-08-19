@@ -1,12 +1,12 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
+from pydantic import BaseModel, Extra, conint
+
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
-
-from pydantic import BaseModel, Extra, conint
 
 
 class Pacticipant(BaseModel):
@@ -61,7 +61,7 @@ class Method(Enum):
     TRACE = "TRACE"
 
 
-class Request(BaseModel):
+class PactRequest(BaseModel):
     body: Optional[Any]
     headers: Optional[Headers]
     method: Method
@@ -69,7 +69,7 @@ class Request(BaseModel):
     query: Optional[Dict[str, List[str]]]
 
 
-class Response(BaseModel):
+class PactResponse(BaseModel):
     body: Optional[Any]
     headers: Optional[Headers]
     matchingRules: Optional[MatchingRule]
@@ -79,8 +79,8 @@ class Response(BaseModel):
 class Interaction(BaseModel):
     description: str
     providerStates: List[ProviderState]
-    request: Request
-    response: Response
+    request: PactRequest
+    response: PactResponse
 
 
 class PactSpecification(BaseModel):

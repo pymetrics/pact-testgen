@@ -1,29 +1,5 @@
 from pactman.mock.pact import Pact as PactmanPact
 from pactman.verifier.result import LoggedResult, Result
-from pactman.verifier.verify import ResponseVerifier
-
-from pact_testgen.models import Response as PactResponse
-from pact_testgen.utils import Response
-
-
-def verify_response(
-    consumer_name: str,
-    provider_name: str,
-    pact_response: PactResponse,
-    actual_response: Response,
-    version: str = "3.0.0",
-) -> bool:
-    """
-    Returns whether the actual response received from the API matches
-    the contract specified in the supplied pact
-    """
-    # TODO: Get version from the actual Pactfile
-    pactman_pact = create_pactman_pact(consumer_name, provider_name, version)
-    result = result_factory()
-    verifier = ResponseVerifier(
-        pactman_pact, pact_response.dict(exclude_none=True), result
-    )
-    return verifier.verify(actual_response)
 
 
 def create_pactman_pact(
