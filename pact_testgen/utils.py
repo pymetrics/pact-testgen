@@ -1,3 +1,6 @@
+from slugify import slugify
+
+
 def to_camel_case(value: str) -> str:
     words = []
     split_on = {" ", "_", "-"}
@@ -14,3 +17,7 @@ def to_camel_case(value: str) -> str:
         words.append(word.capitalize())
 
     return "".join(words)
+
+
+def to_snake_case(value: str) -> str:
+    return slugify(value.lower()).replace("-", "_")

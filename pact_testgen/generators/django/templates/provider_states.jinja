@@ -1,0 +1,13 @@
+"""
+Provider state setup functions for Pact contract
+verification tests.
+"""
+{% for function in setup_functions %}
+def {{ function.method_name }}():
+    # TODO:
+    {%- for provider_state in function.provider_states %}
+    # - {{ provider_state }}
+    {%- endfor %}
+    pass
+
+{% endfor %}

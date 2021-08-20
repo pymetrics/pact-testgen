@@ -105,6 +105,10 @@ class TestCase(BaseModel):
     provider_state_names: List[str]
     test_methods: List[Interaction]
 
+    @property
+    def combined_provider_state_names(self):
+        return " ".join(self.provider_state_names)
+
 
 class TestFile(BaseModel):
     base_class: str

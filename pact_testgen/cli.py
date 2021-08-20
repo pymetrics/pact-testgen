@@ -2,11 +2,13 @@
 import argparse
 import os
 import sys
+from pathlib import Path
 from pact_testgen.pact_testgen import run
 
 
-def directory(path: str):
-    if os.path.isdir(path):
+def directory(path: str) -> Path:
+    path = Path(path)
+    if path.is_dir():
         return path
     raise argparse.ArgumentError()
 
@@ -27,7 +29,11 @@ def main():
     # Reserve -b for Pact Broker support
     args = parser.parse_args()
     try:
-        run(base_class=args.base_class, pact_file=args.pact_file)
+        run(
+            base_class=args.base_class,
+            pact_file=args.pact_file,
+            output_dir=args.output_dir,
+        )
         return 0
     except Exception as e:
         if args.debug:

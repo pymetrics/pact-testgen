@@ -1,9 +1,5 @@
 class {{class_name}}({{file.base_class}}):
 
     def setUp(self):
-        # TODO: Implement the following:
-        {% for name in ps_names %}
-        #  - {{ name }}
-        {% endfor %}
-        pass
+        {{ setup_function_name }}()
     {{methods}}

@@ -3,13 +3,16 @@ from django.test import TestCase
 
 from pact_testgen.public import Response, verify_response
 
-from library.models import Author, Book
+from .provider_states import (
+    setup_nothing,
+    setup_an_author_with_id_1_exists,
+    setup_an_author_with_id_1_exists_a_book_exists_with_author_id_1,
+)
 
 
 class TestNothing(TestCase):
     def setUp(self):
-
-        pass
+        setup_nothing()
 
     def test_an_author_creation_request(self):
         raw_actual_response = self.client.generic(
@@ -59,7 +62,7 @@ class TestNothing(TestCase):
 
 class TestAnAuthorWithId1Exists(TestCase):
     def setUp(self):
-        Author.objects.create(id=1, name="Blake Crouch")
+        setup_an_author_with_id_1_exists()
 
     def test_a_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
@@ -134,10 +137,9 @@ class TestAnAuthorWithId1Exists(TestCase):
         self.assertTrue(success)
 
 
-class TestABookExistsWithAuthorId1AnAuthorWithId1Exists(TestCase):
+class TestAnAuthorWithId1ExistsABookExistsWithAuthorId1(TestCase):
     def setUp(self):
-        author = Author.objects.create(id=1, name="Frank Herbert")
-        Book.objects.create(id=1, author=author, title="Dune")
+        setup_an_author_with_id_1_exists_a_book_exists_with_author_id_1()
 
     def test_a_book_search_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
