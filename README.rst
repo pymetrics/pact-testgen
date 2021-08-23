@@ -49,7 +49,7 @@ Generate a ``provider_states.py`` and ``test_pact.py`` files in your tests direc
 
     pact-testgen /path/to/pactfile.json /tests/dir
 
-For more details, see the :ref:`Usage:Generating test files` section of the documentation.
+For more details, see the Usage section of the documentation.
 
 Fill in the generated provider states file
 ******************************************
