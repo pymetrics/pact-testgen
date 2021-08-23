@@ -19,6 +19,14 @@ pact\_testgen.cli module
     :undoc-members:
     :show-inheritance:
 
+pact\_testgen.files module
+--------------------------
+
+.. automodule:: pact_testgen.files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pact\_testgen.models module
 ---------------------------
 
@@ -31,6 +39,14 @@ pact\_testgen.pact\_testgen module
 ----------------------------------
 
 .. automodule:: pact_testgen.pact_testgen
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pact\_testgen.public module
+---------------------------
+
+.. automodule:: pact_testgen.public
     :members:
     :undoc-members:
     :show-inheritance:

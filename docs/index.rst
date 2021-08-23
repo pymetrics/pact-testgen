@@ -1,5 +1,5 @@
 Welcome to Pact Test Generator's documentation!
-======================================
+===============================================
 
 .. toctree::
    :maxdepth: 2
