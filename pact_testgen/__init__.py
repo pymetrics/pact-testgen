@@ -2,4 +2,4 @@
 
 __author__ = """Chris Lawlor"""
 __email__ = "chris@pymetrics.com"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
