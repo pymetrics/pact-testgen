@@ -2,6 +2,7 @@
 import argparse
 import sys
 from pathlib import Path
+from pact_testgen import __version__
 from pact_testgen.pact_testgen import run
 
 
@@ -25,8 +26,14 @@ def main():
         help=("Python path to the TestCase which generated test cases will subclass."),
     )
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s v{version}".format(version=__version__),
+    )
     # Reserve -b for Pact Broker support
     args = parser.parse_args()
+
     try:
         run(
             base_class=args.base_class,
