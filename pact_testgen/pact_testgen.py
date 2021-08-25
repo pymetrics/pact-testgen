@@ -1,7 +1,6 @@
 """Main module."""
 from collections import defaultdict
 from pathlib import Path
-from typing import List
 
 from pact_testgen.files import (
     load_pact_file,
@@ -24,7 +23,9 @@ def run(
     test_file = convert_to_test_cases(pact, base_class)
     test_file, provider_state_file = generate_tests(test_file)
     write_test_file(test_file, output_dir / test_file_name)
-    write_test_file(provider_state_file, output_dir / provider_state_file_name)
+    write_provider_state_file(
+        provider_state_file, output_dir / provider_state_file_name
+    )
 
 
 def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:

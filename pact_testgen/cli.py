@@ -1,6 +1,5 @@
 """Console script for pact_testgen."""
 import argparse
-import os
 import sys
 from pathlib import Path
 from pact_testgen.pact_testgen import run
