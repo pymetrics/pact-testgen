@@ -57,18 +57,18 @@ test-client: ## Run test_app client tests to generate a sample Pact file
 	cd test_app && pytest client_tests.py
 
 test-provider:  ## Run test_app provider test suite
-	cd test_app/provider && python manage.py test
+	cd test_app/provider && python manage.py test -v 2
 
 testgen: test-client  ## Run pact-testgen on test app contract to regenerate test files
 	cd test_app && ./run_pact_testgen
 
-test: test-client ## run tests quickly with the default Python
+test: test-client testgen test-provider ## run tests quickly with the default Python
 	pytest
 
 test-debug: test-client  ## Run tests, drop to debugger on failure
 	pytest --pdb
 
-test-all: test-client ## run tests on every Python version with tox
+test-all: test-client testgen test-provider  ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python

@@ -32,7 +32,8 @@ def test_verify_response_code_success(verifier):
 
     result = verifier(pact_response={"status": 200}, actual_response=resp)
 
-    assert result is True
+    result.assert_success()
+    assert bool(result) is True
 
 
 def test_verify_response_code_fail(verifier):
@@ -40,7 +41,15 @@ def test_verify_response_code_fail(verifier):
 
     result = verifier(pact_response={"status": 201}, actual_response=resp)
 
-    assert result is False
+    with pytest.raises(AssertionError) as error:
+        result.assert_success()
+
+    assert result.errors == ["Response status code 200 is not expected 201"]
+    assert (
+        str(error.value)
+        == "Unexpected response: Response status code 200 is not expected 201"
+    )
+    assert bool(result) is False
 
 
 def test_verify_type_success(verifier):
@@ -63,7 +72,8 @@ def test_verify_type_success(verifier):
 
     result = verifier(pact_response=expected_resp, actual_response=resp)
 
-    assert result is True
+    result.assert_success()
+    assert bool(result) is True
 
 
 def test_verify_type_fail(verifier):
@@ -86,4 +96,15 @@ def test_verify_type_fail(verifier):
 
     result = verifier(pact_response=expected_resp, actual_response=resp)
 
-    assert result is False
+    with pytest.raises(AssertionError) as error:
+        result.assert_success()
+    assert result.errors == [
+        "body.id not correct type (string is not number) at body.id"
+    ]
+
+    assert str(error.value) == (
+        "Unexpected response: body.id not correct type "
+        "(string is not number) at body.id"
+    )
+
+    assert bool(result) is False

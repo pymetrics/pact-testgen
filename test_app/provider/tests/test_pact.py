@@ -35,10 +35,10 @@ class TestNothing(TestCase):
             "status": 201,
         }
 
-        success = verify_response(
+        result = verify_response(
             "LibraryClient", "Library", raw_expected_response, actual
         )
-        self.assertTrue(success)
+        result.assert_success()
 
     def test_a_book_search_request_for_a_non_existent_author(self):
         raw_actual_response = self.client.generic(
@@ -54,10 +54,10 @@ class TestNothing(TestCase):
             "status": 200,
         }
 
-        success = verify_response(
+        result = verify_response(
             "LibraryClient", "Library", raw_expected_response, actual
         )
-        self.assertTrue(success)
+        result.assert_success()
 
 
 class TestAnAuthorWithId1Exists(TestCase):
@@ -86,10 +86,10 @@ class TestAnAuthorWithId1Exists(TestCase):
             "status": 200,
         }
 
-        success = verify_response(
+        result = verify_response(
             "LibraryClient", "Library", raw_expected_response, actual
         )
-        self.assertTrue(success)
+        result.assert_success()
 
     def test_an_author_update_request(self):
         raw_actual_response = self.client.generic(
@@ -112,10 +112,10 @@ class TestAnAuthorWithId1Exists(TestCase):
             "status": 200,
         }
 
-        success = verify_response(
+        result = verify_response(
             "LibraryClient", "Library", raw_expected_response, actual
         )
-        self.assertTrue(success)
+        result.assert_success()
 
     def test_an_author_deletion_request(self):
         raw_actual_response = self.client.generic(
@@ -131,10 +131,10 @@ class TestAnAuthorWithId1Exists(TestCase):
             "status": 204,
         }
 
-        success = verify_response(
+        result = verify_response(
             "LibraryClient", "Library", raw_expected_response, actual
         )
-        self.assertTrue(success)
+        result.assert_success()
 
 
 class TestAnAuthorWithId1ExistsABookExistsWithAuthorId1(TestCase):
@@ -163,7 +163,7 @@ class TestAnAuthorWithId1ExistsABookExistsWithAuthorId1(TestCase):
             "status": 200,
         }
 
-        success = verify_response(
+        result = verify_response(
             "LibraryClient", "Library", raw_expected_response, actual
         )
-        self.assertTrue(success)
+        result.assert_success()

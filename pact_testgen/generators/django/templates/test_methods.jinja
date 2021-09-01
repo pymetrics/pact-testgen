@@ -9,6 +9,6 @@
 
         raw_expected_response = {{arg.expectation}}
 
-        success = verify_response("{{consumer_name}}", "{{provider_name}}", raw_expected_response, actual)
-        self.assertTrue(success)
+        result = verify_response("{{consumer_name}}", "{{provider_name}}", raw_expected_response, actual)
+        result.assert_success()
     {% endfor %}
