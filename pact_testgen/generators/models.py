@@ -5,6 +5,7 @@ class RequestArgs(BaseModel):
     method: str
     path: str
     data: str = ""
+    content_type: str = "application/json"
 
 
 class TestMethodArgs(BaseModel):
