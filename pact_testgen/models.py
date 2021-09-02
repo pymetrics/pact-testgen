@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Extra, conint
+from pydantic import BaseModel, Extra, conint, Field
 
 try:
     from typing import Literal
@@ -107,9 +107,26 @@ class Pact(BaseModel):
 # Input to template function
 
 
+class RequestArgs(BaseModel):
+    method: str
+    path: str
+    data: str = ""
+    content_type: str = "application/json"
+
+
+class TestMethodArgs(BaseModel):
+    description: str = Field(
+        ..., description="Unformatted name of test method to generate"
+    )
+    expectation: str = Field(
+        ..., description="String representation of pact expectation dictionary"
+    )
+    request: RequestArgs
+
+
 class TestCase(BaseModel):
     provider_state_names: List[str]
-    test_methods: List[Interaction]
+    test_methods: List[TestMethodArgs]
 
     @property
     def combined_provider_state_names(self):

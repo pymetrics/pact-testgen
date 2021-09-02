@@ -2,6 +2,11 @@
 History
 =======
 
+0.3.0 (pending)
+---------------
+
+* Provider state setup functions now raise NotImplementedError by default.
+
 0.2.1 (2021-09-01)
 ------------------
 

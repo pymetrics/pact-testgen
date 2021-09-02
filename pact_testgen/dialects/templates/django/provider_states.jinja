@@ -4,10 +4,10 @@ verification tests.
 """
 {% for function in setup_functions %}
 def {{ function.method_name }}():
-    # TODO:
     {%- for provider_state in function.provider_states %}
     # - {{ provider_state }}
     {%- endfor %}
-    pass
+    # TODO:
+    raise NotImplementedError("Setup function implementation missing.")
 
 {% endfor %}
