@@ -1,4 +1,4 @@
-    {% for method in methods %}
+    {% for method in test_case.test_methods %}
     def {{method.description|snake_case}}(self):
         raw_actual_response = self.client.generic(
             "{{method.request.method}}",

@@ -8,7 +8,7 @@ from pact_testgen.files import (
     write_test_file,
     write_provider_state_file,
 )
-from pact_testgen.generators.django.generator import generate_tests
+from pact_testgen.generators.django.generator import generate_tests, Dialect
 from pact_testgen.models import (
     Pact,
     TestCase,
@@ -29,7 +29,8 @@ def run(
     """Loads the pact file, and writes the generated output files to output_dir"""
     pact = load_pact_file(pact_file)
     test_file = convert_to_test_cases(pact, base_class)
-    test_file, provider_state_file = generate_tests(test_file)
+    dialect = Dialect()
+    test_file, provider_state_file = generate_tests(test_file, dialect)
     write_test_file(test_file, output_dir / test_file_name)
     write_provider_state_file(
         provider_state_file, output_dir / provider_state_file_name
