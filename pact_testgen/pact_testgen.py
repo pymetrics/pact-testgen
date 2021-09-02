@@ -8,7 +8,8 @@ from pact_testgen.files import (
     write_test_file,
     write_provider_state_file,
 )
-from pact_testgen.generators.django.generator import generate_tests, Dialect
+from pact_testgen.generator import generate_tests
+from pact_testgen.dialects.django import Dialect
 from pact_testgen.models import (
     Pact,
     TestCase,

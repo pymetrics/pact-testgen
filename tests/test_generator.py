@@ -1,4 +1,5 @@
-from pact_testgen.generators.django.generator import generate_tests, Dialect
+from pact_testgen.generator import generate_tests
+from pact_testgen.dialects.django import Dialect
 
 
 def test_django_test_generator_output_is_parsable(testfile):
