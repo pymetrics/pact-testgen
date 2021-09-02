@@ -73,4 +73,5 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
         import_path=base_class_import_path,
         provider=pact.provider,
         test_cases=cases,
+        pact_version=pact.version,
     )

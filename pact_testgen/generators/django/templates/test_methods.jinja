@@ -10,6 +10,12 @@
 
         raw_expected_response = {{arg.expectation}}
 
-        result = verify_response("{{consumer_name}}", "{{provider_name}}", raw_expected_response, actual)
+        result = verify_response(
+            "{{consumer_name}}",
+            "{{provider_name}}",
+            raw_expected_response,
+            actual,
+            version="{{pact_version}}"
+        )
         result.assert_success()
     {% endfor %}

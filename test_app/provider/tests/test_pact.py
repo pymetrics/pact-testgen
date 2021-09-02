@@ -26,7 +26,13 @@ class TestNothing(TestCase):
 
         raw_expected_response = {'body': {'name': 'Neal Stephenson', 'id': 1}, 'headers': None, 'matchingRules': {'body': {'$.id': {'matchers': [{'match': 'type', 'max': None, 'min': None, 'regex': None}]}}}, 'status': 201}
 
-        result = verify_response("LibraryClient", "Library", raw_expected_response, actual)
+        result = verify_response(
+            "LibraryClient",
+            "Library",
+            raw_expected_response,
+            actual,
+            version="3.0.0"
+        )
         result.assert_success()
     
     def test_a_book_search_request_for_a_non_existent_author(self):
@@ -40,7 +46,13 @@ class TestNothing(TestCase):
 
         raw_expected_response = {'body': [], 'headers': None, 'matchingRules': None, 'status': 200}
 
-        result = verify_response("LibraryClient", "Library", raw_expected_response, actual)
+        result = verify_response(
+            "LibraryClient",
+            "Library",
+            raw_expected_response,
+            actual,
+            version="3.0.0"
+        )
         result.assert_success()
     
 
@@ -60,7 +72,13 @@ class TestAnAuthorWithId1Exists(TestCase):
 
         raw_expected_response = {'body': {'id': 1, 'name': 'Blake Crouch'}, 'headers': None, 'matchingRules': {'body': {'$': {'matchers': [{'match': 'type', 'max': None, 'min': None, 'regex': None}]}}}, 'status': 200}
 
-        result = verify_response("LibraryClient", "Library", raw_expected_response, actual)
+        result = verify_response(
+            "LibraryClient",
+            "Library",
+            raw_expected_response,
+            actual,
+            version="3.0.0"
+        )
         result.assert_success()
     
     def test_an_author_update_request(self):
@@ -74,7 +92,13 @@ class TestAnAuthorWithId1Exists(TestCase):
 
         raw_expected_response = {'body': {'name': 'Helene Wecker', 'id': 1}, 'headers': None, 'matchingRules': {'body': {'$.id': {'matchers': [{'match': 'type', 'max': None, 'min': None, 'regex': None}]}}}, 'status': 200}
 
-        result = verify_response("LibraryClient", "Library", raw_expected_response, actual)
+        result = verify_response(
+            "LibraryClient",
+            "Library",
+            raw_expected_response,
+            actual,
+            version="3.0.0"
+        )
         result.assert_success()
     
     def test_an_author_deletion_request(self):
@@ -88,7 +112,13 @@ class TestAnAuthorWithId1Exists(TestCase):
 
         raw_expected_response = {'body': None, 'headers': None, 'matchingRules': None, 'status': 204}
 
-        result = verify_response("LibraryClient", "Library", raw_expected_response, actual)
+        result = verify_response(
+            "LibraryClient",
+            "Library",
+            raw_expected_response,
+            actual,
+            version="3.0.0"
+        )
         result.assert_success()
     
 
@@ -108,6 +138,12 @@ class TestAnAuthorWithId1ExistsABookExistsWithAuthorId1(TestCase):
 
         raw_expected_response = {'body': [{'id': 1, 'title': 'Dune'}], 'headers': None, 'matchingRules': {'body': {'$': {'matchers': [{'match': 'type', 'max': None, 'min': 1, 'regex': None}]}}}, 'status': 200}
 
-        result = verify_response("LibraryClient", "Library", raw_expected_response, actual)
+        result = verify_response(
+            "LibraryClient",
+            "Library",
+            raw_expected_response,
+            actual,
+            version="3.0.0"
+        )
         result.assert_success()
     

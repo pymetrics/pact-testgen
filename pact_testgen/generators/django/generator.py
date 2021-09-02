@@ -26,7 +26,10 @@ def generate_tests(test_file: TestFile) -> Tuple[str, str]:
             args.append(_build_method_args(method))
 
         methods = env.get_template("test_methods.jinja").render(
-            args=args, consumer_name=consumer_name, provider_name=provider_name
+            args=args,
+            consumer_name=consumer_name,
+            provider_name=provider_name,
+            pact_version=test_file.pact_version,
         )
 
         setup_function_name = (

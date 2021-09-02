@@ -97,6 +97,12 @@ class Pact(BaseModel):
     metadata: Optional[Metadata]
     provider: Pacticipant
 
+    @property
+    def version(self):
+        if self.metadata is None or self.metadata.pactSpecification is None:
+            return "2.0.0"
+        return self.metadata.pactSpecification.version
+
 
 # Input to template function
 
@@ -111,6 +117,7 @@ class TestCase(BaseModel):
 
 
 class TestFile(BaseModel):
+    pact_version: str
     base_class: str
     consumer: Pacticipant
     import_path: str
