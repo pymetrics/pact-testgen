@@ -1,4 +1,5 @@
 """Main module."""
+import json
 from collections import defaultdict
 from pathlib import Path
 
@@ -8,7 +9,14 @@ from pact_testgen.files import (
     write_provider_state_file,
 )
 from pact_testgen.generators.django.generator import generate_tests
-from pact_testgen.models import Pact, TestCase, TestFile
+from pact_testgen.models import (
+    Pact,
+    TestCase,
+    TestFile,
+    TestMethodArgs,
+    RequestArgs,
+    Interaction,
+)
 
 
 def run(
@@ -63,7 +71,7 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
                 # one interaction, so we can use the provider states
                 # of the first interaction.
                 provider_state_names=[ps.name for ps in interactions[0].providerStates],
-                test_methods=interactions,
+                test_methods=[_build_method_args(i) for i in interactions],
             )
         )
 
@@ -75,3 +83,19 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
         test_cases=cases,
         pact_version=pact.version,
     )
+
+
+def _build_method_args(interaction: Interaction) -> TestMethodArgs:
+    request_args = RequestArgs(
+        method=interaction.request.method.value,
+        path=interaction.request.path,
+        data=json.dumps(interaction.request.body) if interaction.request.body else "",
+    )
+
+    test_method_args = TestMethodArgs(
+        description=interaction.description,
+        expectation=repr(interaction.response.dict()),
+        request=request_args,
+    )
+
+    return test_method_args

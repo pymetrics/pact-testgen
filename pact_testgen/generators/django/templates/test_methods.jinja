@@ -1,14 +1,14 @@
-    {% for arg in args %}
-    def {{arg.name}}(self):
+    {% for method in methods %}
+    def {{method.description|snake_case}}(self):
         raw_actual_response = self.client.generic(
-            "{{arg.request.method}}",
-            "{{arg.request.path}}",
-            {% if arg.request.data %}json.dumps({{arg.request.data}}),{% endif %}
-            content_type="{{arg.request.content_type}}"
+            "{{method.request.method}}",
+            "{{method.request.path}}",
+            {% if method.request.data %}json.dumps({{method.request.data}}),{% endif %}
+            content_type="{{method.request.content_type}}"
         )
         actual = Response.from_django_response(raw_actual_response)
 
-        raw_expected_response = {{arg.expectation}}
+        raw_expected_response = {{method.expectation}}
 
         result = verify_response(
             "{{consumer_name}}",
