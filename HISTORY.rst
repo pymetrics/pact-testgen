@@ -6,6 +6,7 @@ History
 ---------------
 
 * Provider state setup functions now raise NotImplementedError by default.
+* Format output files with target line length option.
 
 0.2.1 (2021-09-01)
 ------------------

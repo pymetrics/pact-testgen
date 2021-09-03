@@ -25,6 +25,12 @@ def main():
         default="django.test.TestCase",
         help=("Python path to the TestCase which generated test cases will subclass."),
     )
+    parser.add_argument(
+        "--line-length",
+        type=int,
+        default=88,
+        help="Target line length for generated files.",
+    )
     parser.add_argument("--debug", action="store_true")
     parser.add_argument(
         "--version",
@@ -39,6 +45,7 @@ def main():
             base_class=args.base_class,
             pact_file=args.pact_file,
             output_dir=args.output_dir,
+            line_length=args.line_length,
         )
         return 0
     except Exception as e:

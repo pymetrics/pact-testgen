@@ -1,4 +1,5 @@
 from typing import Tuple
+
 from .dialects.base import BaseDialect as Dialect
 from .models import TestFile
 

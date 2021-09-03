@@ -3,20 +3,21 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
+from pact_testgen.dialects.base import PythonFormatter
+from pact_testgen.dialects.django import Dialect
 from pact_testgen.files import (
     load_pact_file,
-    write_test_file,
     write_provider_state_file,
+    write_test_file,
 )
 from pact_testgen.generator import generate_tests
-from pact_testgen.dialects.django import Dialect
 from pact_testgen.models import (
+    Interaction,
     Pact,
+    RequestArgs,
     TestCase,
     TestFile,
     TestMethodArgs,
-    RequestArgs,
-    Interaction,
 )
 
 
@@ -26,15 +27,17 @@ def run(
     output_dir: Path,
     test_file_name="test_pact.py",
     provider_state_file_name="provider_states.py",
+    line_length=88,
 ):
     """Loads the pact file, and writes the generated output files to output_dir"""
     pact = load_pact_file(pact_file)
     test_file = convert_to_test_cases(pact, base_class)
     dialect = Dialect()
     test_file, provider_state_file = generate_tests(test_file, dialect)
-    write_test_file(test_file, output_dir / test_file_name)
+    format = PythonFormatter(line_length=line_length).format
+    write_test_file(format(test_file), output_dir / test_file_name)
     write_provider_state_file(
-        provider_state_file, output_dir / provider_state_file_name
+        format(provider_state_file), output_dir / provider_state_file_name
     )
 
 
