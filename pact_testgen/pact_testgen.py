@@ -1,5 +1,6 @@
 """Main module."""
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -28,6 +29,7 @@ def run(
     test_file_name="test_pact.py",
     provider_state_file_name="provider_states.py",
     line_length=88,
+    quiet=False,
 ):
     """Loads the pact file, and writes the generated output files to output_dir"""
     pact = load_pact_file(pact_file)
@@ -35,10 +37,20 @@ def run(
     dialect = Dialect()
     test_file, provider_state_file = generate_tests(test_file, dialect)
     format = PythonFormatter(line_length=line_length).format
-    write_test_file(format(test_file), output_dir / test_file_name)
-    write_provider_state_file(
-        format(provider_state_file), output_dir / provider_state_file_name
+    test_file_path = output_dir / test_file_name
+    provider_state_file_path = output_dir / provider_state_file_name
+    write_test_file(format(test_file), test_file_path)
+    wrote_ps_file = write_provider_state_file(
+        format(provider_state_file), provider_state_file_path
     )
+    if not quiet:
+        print(f"Wrote test file {test_file_path}")
+        if wrote_ps_file:
+            print(f"Wrote provider state file {provider_state_file_path}")
+        else:
+            print(
+                "provider_states.py already exists, not overwriting.", file=sys.stderr
+            )
 
 
 def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:

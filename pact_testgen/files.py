@@ -1,5 +1,5 @@
 import json
-import sys
+
 from pathlib import Path
 
 from pact_testgen.models import Pact
@@ -17,11 +17,11 @@ def write_test_file(testfile: str, path: Path):
         f.write(testfile)
 
 
-def write_provider_state_file(provider_state_file: str, path: Path):
+def write_provider_state_file(provider_state_file: str, path: Path) -> bool:
     # TODO: Support appending new provider state functions.
     # For now, don't write the file if it already exists
     if not path.exists():
         with open(path, "w") as f:
             f.write(provider_state_file)
-    else:
-        print("provider_states.py already exists, not overwriting.", file=sys.stderr)
+        return True
+    return False

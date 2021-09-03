@@ -37,6 +37,7 @@ def main():
         action="version",
         version="%(prog)s v{version}".format(version=__version__),
     )
+    parser.add_argument("-q", "--quiet", action="store_true", help="Silence output")
     # Reserve -b for Pact Broker support
     args = parser.parse_args()
 
