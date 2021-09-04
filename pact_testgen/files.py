@@ -3,7 +3,7 @@ from ast import parse
 from _ast import Module, FunctionDef
 from io import StringIO
 
-from typing import Generator, List
+from typing import Generator, List, Tuple
 from pathlib import Path
 from enum import Enum, auto
 
@@ -19,6 +19,7 @@ class ProviderStateFileOutcome(Enum):
     WROTE_NEW = auto()
     MERGED = auto()
     LEFT_EXISTING = auto()
+    NO_CHANGES_REQUIRED = auto()
 
 
 def load_pact_file(path: str) -> Pact:
@@ -43,10 +44,12 @@ def write_provider_state_file(
         if merge:
             with open(path, "w") as target_handle:
                 target = target_handle.read()
-                final = merge(target, provider_state_file)
+                final, num_added_functions = merge(target, provider_state_file)
                 target.seek(0)
                 target.write(final)
-            return ProviderStateFileOutcome.MERGED
+            if num_added_functions:
+                return ProviderStateFileOutcome.MERGED
+            return ProviderStateFileOutcome.NO_CHANGES_REQUIRED
         return ProviderStateFileOutcome.LEFT_EXISTING
     with open(path, "w") as f:
         f.write(provider_state_file)
@@ -63,12 +66,15 @@ def merge_is_available():
     return unparse is not None
 
 
-def merge(target: str, src: str) -> str:
+def merge(target: str, src: str) -> Tuple[str, int]:
     """
     Merge "src" code into "target".
 
     Only add functions from src that aren't
     already present in target.
+
+    Returns the merged file as a string, and the number
+    of functions that were added.
     """
     if not merge_is_available:
         raise RuntimeError("Cannot merge. No unparse function available")
@@ -87,4 +93,4 @@ def merge(target: str, src: str) -> str:
         target_buffer.write("\n\n".join(function_bodies_to_add))
         target_buffer.write("\n\n")
 
-    return target_buffer.getvalue()
+    return target_buffer.getvalue(), len(function_bodies_to_add)

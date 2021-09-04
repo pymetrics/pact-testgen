@@ -50,12 +50,12 @@ def run(
         if ps_file_outcome == ProviderStateFileOutcome.WROTE_NEW:
             print(f"Wrote new provider state file {provider_state_file_path}")
         elif ps_file_outcome == ProviderStateFileOutcome.MERGED:
-            # TODO: We used the merge strategy, but did we actually
-            # write new functions??
             print(
                 f"Merged new functions into provider state file "
                 f"{provider_state_file_path}"
             )
+        elif ps_file_outcome == ProviderStateFileOutcome.NO_CHANGES_REQUIRED:
+            print("No changes required to provider state file.")
         else:
             print(
                 "provider_states.py already exists, not overwriting.", file=sys.stderr
