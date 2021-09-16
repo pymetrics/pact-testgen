@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-    pact_testgen.generators
+    pact_testgen.dialects
 
 Submodules
 ----------
@@ -23,6 +23,14 @@ pact\_testgen.files module
 --------------------------
 
 .. automodule:: pact_testgen.files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pact\_testgen.generator module
+------------------------------
+
+.. automodule:: pact_testgen.generator
     :members:
     :undoc-members:
     :show-inheritance:
