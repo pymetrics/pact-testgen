@@ -4,16 +4,12 @@ from django.test import TestCase
 from pact_testgen.public import Response, verify_response
 
 from .provider_states import (
-    setup_nothing,
     setup_an_author_id_1,
     setup_an_author_id_1_a_book_exists_with_author_id_1,
 )
 
 
-class TestNothing(TestCase):
-    def setUp(self):
-        setup_nothing()
-
+class TestNoInitialState(TestCase):
     def an_author_creation_request(self):
         raw_actual_response = self.client.generic(
             "POST",

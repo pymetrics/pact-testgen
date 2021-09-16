@@ -5,14 +5,8 @@ verification tests.
 from library.models import Author, Book
 
 
-def setup_nothing():
-    # - Nothing
-    pass
-
-
 def setup_an_author_id_1():
     # - An Author id 1
-    # TODO:
     Author.objects.create(id=1, name="Blake Crouch")
 
 

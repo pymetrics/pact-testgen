@@ -7,12 +7,6 @@
   },
   "interactions": [
     {
-      "providerStates": [
-        {
-          "name": "Nothing",
-          "params": {}
-        }
-      ],
       "description": "An author creation request",
       "request": {
         "method": "POST",
@@ -128,12 +122,6 @@
       }
     },
     {
-      "providerStates": [
-        {
-          "name": "Nothing",
-          "params": {}
-        }
-      ],
       "description": "A book search request for a non-existent author",
       "request": {
         "method": "GET",

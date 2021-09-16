@@ -26,7 +26,7 @@ def test_create_author(pact, library_client: LibraryClient):
     expected = {"name": name, "id": Like(1)}
 
     (
-        pact.given("Nothing")
+        pact.given(None)
         .upon_receiving("An author creation request")
         .with_request("POST", "/authors", body=request_body)
         .will_respond_with(201, body=expected)
@@ -76,7 +76,7 @@ def test_delete_author(pact, library_client: LibraryClient):
 
 def test_get_books_by_author_no_author(pact, library_client: LibraryClient):
     (
-        pact.given("Nothing")
+        pact.given(None)
         .upon_receiving("A book search request for a non-existent author")
         .with_request("GET", "/books", query={"authorId": ["100"]})
         .will_respond_with(200, body=[])

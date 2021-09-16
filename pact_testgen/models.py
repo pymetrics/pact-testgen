@@ -87,7 +87,7 @@ class PactResponse(BaseModel):
 
 class Interaction(BaseModel):
     description: str
-    providerStates: List[ProviderState]
+    providerStates: Optional[List[ProviderState]]
     request: PactRequest
     response: PactResponse
 
@@ -138,8 +138,12 @@ class TestCase(BaseModel):
     test_methods: List[TestMethodArgs]
 
     @property
-    def combined_provider_state_names(self):
+    def combined_provider_state_names(self) -> str:
         return " ".join(self.provider_state_names)
+
+    @property
+    def requires_provider_state(self) -> bool:
+        return bool(self.provider_state_names)
 
 
 class TestFile(BaseModel):
