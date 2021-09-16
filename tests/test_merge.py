@@ -15,7 +15,7 @@ def test_merge_empty_target():
     """
     )
 
-    result = merge("", source)
+    result, added = merge("", source)
 
     assert result == dedent(
         """
@@ -24,6 +24,7 @@ def test_merge_empty_target():
 
         """
     )
+    assert added == 1
 
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="requires python3.9")
@@ -43,7 +44,7 @@ def test_merge_no_duplicate_functions():
         """
     )
 
-    result = merge(target, source)
+    result, added = merge(target, source)
 
     assert result == dedent(
         """
@@ -56,6 +57,7 @@ def test_merge_no_duplicate_functions():
 
         """
     )
+    assert added == 1
 
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="requires python3.9")
@@ -76,7 +78,7 @@ def test_merge_with_duplicates():
         """
     )
 
-    result = merge(target, source)
+    result, added = merge(target, source)
 
     assert result == dedent(
         """
@@ -86,6 +88,7 @@ def test_merge_with_duplicates():
 
         """
     )
+    assert added == 0
 
 
 @pytest.mark.skipif(sys.version_info < (3, 9), reason="requires python3.9")
@@ -111,7 +114,7 @@ def test_merge_with_duplicate_and_new_function():
         """
     )
 
-    result = merge(target, source)
+    result, added = merge(target, source)
 
     assert result == dedent(
         """
@@ -125,3 +128,4 @@ def test_merge_with_duplicate_and_new_function():
 
         """
     )
+    assert added == 1
