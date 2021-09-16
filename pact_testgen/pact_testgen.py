@@ -81,25 +81,37 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
         # We need a hashable collection to key on, but also need to rememeber
         # name order so that test case names are deterministic based on the
         # order defined in the Pact contract.
-        provider_state_key = frozenset([ps.name for ps in interaction.providerStates])
+        if interaction.providerStates is not None:
+            provider_state_key = frozenset(
+                [ps.full_name() for ps in interaction.providerStates]
+            )
+        else:
+            provider_state_key = None
         provider_states_interactions[provider_state_key].append(interaction)
 
     cases = []
 
     for (
-        _,
+        provider_state_key,
         interactions,
     ) in provider_states_interactions.items():
-        cases.append(
-            TestCase(
+        if provider_state_key is not None:
+            case = TestCase(
                 # Interactions have been grouped by the set of
                 # provider states, and we know there is at least
                 # one interaction, so we can use the provider states
                 # of the first interaction.
-                provider_state_names=[ps.name for ps in interactions[0].providerStates],
+                provider_state_names=[
+                    ps.full_name() for ps in interactions[0].providerStates
+                ],
                 test_methods=[_build_method_args(i) for i in interactions],
             )
-        )
+        else:
+            case = TestCase(
+                provider_state_names=[],
+                test_methods=[_build_method_args(i) for i in interactions],
+            )
+        cases.append(case)
 
     return TestFile(
         base_class=base_class,

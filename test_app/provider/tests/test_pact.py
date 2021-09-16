@@ -4,16 +4,12 @@ from django.test import TestCase
 from pact_testgen.public import Response, verify_response
 
 from .provider_states import (
-    setup_nothing,
-    setup_an_author_with_id_1_exists,
-    setup_an_author_with_id_1_exists_a_book_exists_with_author_id_1,
+    setup_an_author_id_1,
+    setup_an_author_id_1_a_book_exists_with_author_id_1,
 )
 
 
-class TestNothing(TestCase):
-    def setUp(self):
-        setup_nothing()
-
+class TestNoInitialState(TestCase):
     def an_author_creation_request(self):
         raw_actual_response = self.client.generic(
             "POST",
@@ -62,9 +58,9 @@ class TestNothing(TestCase):
         result.assert_success()
 
 
-class TestAnAuthorWithId1Exists(TestCase):
+class TestAnAuthorId1(TestCase):
     def setUp(self):
-        setup_an_author_with_id_1_exists()
+        setup_an_author_id_1()
 
     def a_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
@@ -140,9 +136,9 @@ class TestAnAuthorWithId1Exists(TestCase):
         result.assert_success()
 
 
-class TestAnAuthorWithId1ExistsABookExistsWithAuthorId1(TestCase):
+class TestAnAuthorId1ABookExistsWithAuthorId1(TestCase):
     def setUp(self):
-        setup_an_author_with_id_1_exists_a_book_exists_with_author_id_1()
+        setup_an_author_id_1_a_book_exists_with_author_id_1()
 
     def a_book_search_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(

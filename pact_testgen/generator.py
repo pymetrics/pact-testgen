@@ -21,7 +21,10 @@ def generate_tests(test_file: TestFile, dialect: Dialect) -> Tuple[str, str]:
 
         assert methods, "Failed to generate test methods"
 
-        setup_function_name = dialect.get_setup_function_name(test_case)
+        if test_case.requires_provider_state:
+            setup_function_name = dialect.get_setup_function_name(test_case)
+        else:
+            setup_function_name = None
 
         case = dialect.test_case_template.render(
             ps_names=test_case.combined_provider_state_names,
@@ -30,12 +33,13 @@ def generate_tests(test_file: TestFile, dialect: Dialect) -> Tuple[str, str]:
             setup_function_name=setup_function_name,
         )
         cases.append(case)
-        provider_state_setup_functions.append(
-            {
-                "method_name": setup_function_name,
-                "provider_states": test_case.provider_state_names,
-            }
-        )
+        if test_case.requires_provider_state:
+            provider_state_setup_functions.append(
+                {
+                    "method_name": setup_function_name,
+                    "provider_states": test_case.provider_state_names,
+                }
+            )
 
     all_tests = dialect.test_file_template.render(
         file=test_file, cases=cases, setup_functions=provider_state_setup_functions

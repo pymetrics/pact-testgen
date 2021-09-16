@@ -7,12 +7,6 @@
   },
   "interactions": [
     {
-      "providerStates": [
-        {
-          "name": "Nothing",
-          "params": {}
-        }
-      ],
       "description": "An author creation request",
       "request": {
         "method": "POST",
@@ -43,8 +37,10 @@
     {
       "providerStates": [
         {
-          "name": "An Author with ID 1 exists",
-          "params": {}
+          "name": "An Author",
+          "params": {
+            "id": 1
+          }
         }
       ],
       "description": "A request for author ID 1",
@@ -74,8 +70,10 @@
     {
       "providerStates": [
         {
-          "name": "An Author with ID 1 exists",
-          "params": {}
+          "name": "An Author",
+          "params": {
+            "id": 1
+          }
         }
       ],
       "description": "An author update request",
@@ -108,8 +106,10 @@
     {
       "providerStates": [
         {
-          "name": "An Author with ID 1 exists",
-          "params": {}
+          "name": "An Author",
+          "params": {
+            "id": 1
+          }
         }
       ],
       "description": "An author deletion request",
@@ -122,12 +122,6 @@
       }
     },
     {
-      "providerStates": [
-        {
-          "name": "Nothing",
-          "params": {}
-        }
-      ],
       "description": "A book search request for a non-existent author",
       "request": {
         "method": "GET",
@@ -146,8 +140,10 @@
     {
       "providerStates": [
         {
-          "name": "An Author with ID 1 exists",
-          "params": {}
+          "name": "An Author",
+          "params": {
+            "id": 1
+          }
         },
         {
           "name": "A Book exists with author ID 1",

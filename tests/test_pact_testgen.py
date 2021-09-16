@@ -17,7 +17,6 @@ def test_parse_pactfile(pactfile_dict):
 
     assert len(pact.interactions) > 1
     for interaction in pact.interactions:
-        assert interaction.providerStates
         assert interaction.description
         assert interaction.request
         assert interaction.response
