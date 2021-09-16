@@ -9,6 +9,8 @@ History
 * Format output files with target line length option.
 * Improve output to console, add quiet option.
 * Adds option to merge changes to provider state file (Python 3.9 only).
+* Include structured provider state parameters from Pact v3 in provider
+  state function names.
 
 0.2.1 (2021-09-01)
 ------------------

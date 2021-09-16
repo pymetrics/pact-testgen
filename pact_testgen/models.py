@@ -32,6 +32,15 @@ class ProviderState(BaseModel):
     name: str
     params: Optional[Dict]
 
+    def full_name(self):
+        if not self.params:
+            return self.name
+        return f"{self.name} {self._stringify_params()}"
+
+    def _stringify_params(self):
+        param_strings = [f"{k} {v}" for k, v in self.params.items()]
+        return " ".join(param_strings)
+
 
 class Headers(BaseModel):
     pass
