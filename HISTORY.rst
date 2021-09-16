@@ -8,6 +8,7 @@ History
 * Provider state setup functions now raise NotImplementedError by default.
 * Format output files with target line length option.
 * Improve output to console, add quiet option.
+* Adds option to merge changes to provider state file (Python 3.9 only).
 
 0.2.1 (2021-09-01)
 ------------------
