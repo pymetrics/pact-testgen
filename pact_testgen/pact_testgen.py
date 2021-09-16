@@ -1,22 +1,25 @@
 """Main module."""
 import json
+import sys
 from collections import defaultdict
 from pathlib import Path
 
+from pact_testgen.dialects.base import PythonFormatter
+from pact_testgen.dialects.django import Dialect
 from pact_testgen.files import (
+    ProviderStateFileOutcome,
     load_pact_file,
-    write_test_file,
     write_provider_state_file,
+    write_test_file,
 )
 from pact_testgen.generator import generate_tests
-from pact_testgen.dialects.django import Dialect
 from pact_testgen.models import (
+    Interaction,
     Pact,
+    RequestArgs,
     TestCase,
     TestFile,
     TestMethodArgs,
-    RequestArgs,
-    Interaction,
 )
 
 
@@ -26,16 +29,37 @@ def run(
     output_dir: Path,
     test_file_name="test_pact.py",
     provider_state_file_name="provider_states.py",
+    line_length=88,
+    quiet=False,
+    merge_ps_file=False,
 ):
     """Loads the pact file, and writes the generated output files to output_dir"""
     pact = load_pact_file(pact_file)
     test_file = convert_to_test_cases(pact, base_class)
     dialect = Dialect()
     test_file, provider_state_file = generate_tests(test_file, dialect)
-    write_test_file(test_file, output_dir / test_file_name)
-    write_provider_state_file(
-        provider_state_file, output_dir / provider_state_file_name
+    format = PythonFormatter(line_length=line_length).format
+    test_file_path = output_dir / test_file_name
+    provider_state_file_path = output_dir / provider_state_file_name
+    write_test_file(format(test_file), test_file_path)
+    ps_file_outcome = write_provider_state_file(
+        format(provider_state_file), provider_state_file_path, merge=merge_ps_file
     )
+    if not quiet:
+        print(f"Wrote test file {test_file_path}")
+        if ps_file_outcome == ProviderStateFileOutcome.WROTE_NEW:
+            print(f"Wrote new provider state file {provider_state_file_path}")
+        elif ps_file_outcome == ProviderStateFileOutcome.MERGED:
+            print(
+                f"Merged new functions into provider state file "
+                f"{provider_state_file_path}"
+            )
+        elif ps_file_outcome == ProviderStateFileOutcome.NO_CHANGES_REQUIRED:
+            print("No changes required to provider state file.")
+        else:
+            print(
+                "provider_states.py already exists, not overwriting.", file=sys.stderr
+            )
 
 
 def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:

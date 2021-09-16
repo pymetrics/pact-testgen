@@ -10,7 +10,7 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = ["jinja2", "pydantic", "pactman", "python-slugify"]
+requirements = ["jinja2", "pydantic", "pactman", "python-slugify", "black"]
 
 # Install typing_extensions on Python 3.7
 if sys.version_info < (3, 8):
@@ -32,6 +32,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     description="Generate Python test cases from Pact files, "
     "for easier provider verification.",
@@ -50,6 +51,6 @@ setup(
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/pymetrics/pact-testgen",
-    version="0.2.1",
+    version="0.3.0",
     zip_safe=False,
 )
