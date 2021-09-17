@@ -10,7 +10,7 @@ from .provider_states import (
 
 
 class TestNoInitialState(TestCase):
-    def an_author_creation_request(self):
+    def test_an_author_creation_request(self):
         raw_actual_response = self.client.generic(
             "POST",
             "/authors",
@@ -39,7 +39,7 @@ class TestNoInitialState(TestCase):
         )
         result.assert_success()
 
-    def a_book_search_request_for_a_non_existent_author(self):
+    def test_a_book_search_request_for_a_non_existent_author(self):
         raw_actual_response = self.client.generic(
             "GET", "/books", content_type="application/json"
         )
@@ -62,7 +62,7 @@ class TestAnAuthorId1(TestCase):
     def setUp(self):
         setup_an_author_id_1()
 
-    def a_request_for_author_id_1(self):
+    def test_a_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
             "GET", "/authors/1", content_type="application/json"
         )
@@ -88,7 +88,7 @@ class TestAnAuthorId1(TestCase):
         )
         result.assert_success()
 
-    def an_author_update_request(self):
+    def test_an_author_update_request(self):
         raw_actual_response = self.client.generic(
             "PATCH",
             "/authors/1",
@@ -117,7 +117,7 @@ class TestAnAuthorId1(TestCase):
         )
         result.assert_success()
 
-    def an_author_deletion_request(self):
+    def test_an_author_deletion_request(self):
         raw_actual_response = self.client.generic(
             "DELETE", "/authors/1", content_type="application/json"
         )
@@ -140,7 +140,7 @@ class TestAnAuthorId1ABookExistsWithAuthorId1(TestCase):
     def setUp(self):
         setup_an_author_id_1_a_book_exists_with_author_id_1()
 
-    def a_book_search_request_for_author_id_1(self):
+    def test_a_book_search_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
             "GET", "/books", content_type="application/json"
         )
