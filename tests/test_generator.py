@@ -15,6 +15,12 @@ def test_output_includes_expected_test_cases(testfile):
     assert "TestAnAuthorId1" in test_file
     assert "TestAnAuthorId1ABookExistsWithAuthorId1" in test_file
     assert "TestNoInitialState" in test_file
+    assert "test_an_author_creation_request" in test_file
+    assert "test_a_book_search_request_for_a_non_existent_author" in test_file
+    assert "test_a_request_for_author_id_1" in test_file
+    assert "test_an_author_update_request" in test_file
+    assert "test_an_author_deletion_request" in test_file
+    assert "test_a_book_search_request_for_author_id_1" in test_file
 
 
 def test_provider_state_file_has_expected_methods(testfile):
