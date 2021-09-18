@@ -56,7 +56,7 @@ format: ## Run Black formatter
 test-client: ## Run test_app client tests to generate a sample Pact file
 	cd test_app && pytest client_tests.py
 
-test-provider: testgen  ## Run test_app provider test suite
+test-provider: ## Run test_app provider test suite
 	cd test_app/provider && python manage.py test
 
 testgen: test-client  ## Run pact-testgen on test app contract to regenerate test files

@@ -14,7 +14,7 @@ class TestNoInitialState(TestCase):
         raw_actual_response = self.client.generic(
             "POST",
             "/authors",
-            json.dumps({"name": "Neal Stephenson"}),
+            data='{"name": "Neal Stephenson", "is_featured": false}',
             content_type="application/json",
         )
         actual = Response.from_django_response(raw_actual_response)
@@ -41,7 +41,10 @@ class TestNoInitialState(TestCase):
 
     def test_a_book_search_request_for_a_non_existent_author(self):
         raw_actual_response = self.client.generic(
-            "GET", "/books", content_type="application/json"
+            "GET",
+            "/books",
+            QUERY_STRING="authorId=100",
+            content_type="application/json",
         )
         actual = Response.from_django_response(raw_actual_response)
 
@@ -92,13 +95,13 @@ class TestAnAuthorId1(TestCase):
         raw_actual_response = self.client.generic(
             "PATCH",
             "/authors/1",
-            json.dumps({"name": "Helene Wecker"}),
+            data='{"name": "Helene Wecker", "is_featured": true}',
             content_type="application/json",
         )
         actual = Response.from_django_response(raw_actual_response)
 
         raw_expected_response = {
-            "body": {"name": "Helene Wecker", "id": 1},
+            "body": {"name": "Helene Wecker", "id": 1, "is_featured": True},
             "headers": None,
             "matchingRules": {
                 "body": {
@@ -142,7 +145,7 @@ class TestAnAuthorId1ABookExistsWithAuthorId1(TestCase):
 
     def test_a_book_search_request_for_author_id_1(self):
         raw_actual_response = self.client.generic(
-            "GET", "/books", content_type="application/json"
+            "GET", "/books", QUERY_STRING="authorId=1", content_type="application/json"
         )
         actual = Response.from_django_response(raw_actual_response)
 
@@ -158,6 +161,24 @@ class TestAnAuthorId1ABookExistsWithAuthorId1(TestCase):
                     }
                 }
             },
+            "status": 200,
+        }
+
+        result = verify_response(
+            "LibraryClient", "Library", raw_expected_response, actual, version="3.0.0"
+        )
+        result.assert_success()
+
+    def test_a_book_search_request_for_author_id_2(self):
+        raw_actual_response = self.client.generic(
+            "GET", "/books", QUERY_STRING="authorId=2", content_type="application/json"
+        )
+        actual = Response.from_django_response(raw_actual_response)
+
+        raw_expected_response = {
+            "body": [],
+            "headers": None,
+            "matchingRules": None,
             "status": 200,
         }
 

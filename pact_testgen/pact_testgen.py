@@ -1,5 +1,4 @@
 """Main module."""
-import json
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -124,10 +123,12 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
 
 
 def _build_method_args(interaction: Interaction) -> TestMethodArgs:
+
     request_args = RequestArgs(
         method=interaction.request.method.value,
         path=interaction.request.path,
-        data=json.dumps(interaction.request.body) if interaction.request.body else "",
+        data=interaction.request.body,
+        query_params=interaction.request.query,
     )
 
     test_method_args = TestMethodArgs(

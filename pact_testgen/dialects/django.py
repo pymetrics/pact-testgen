@@ -2,7 +2,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pathlib import Path
 
 from pact_testgen.models import TestCase
-from pact_testgen.utils import to_camel_case, to_snake_case
+from pact_testgen.utils import jsondump, to_camel_case, to_query_string, to_snake_case
 
 from .base import BaseDialect
 
@@ -15,6 +15,8 @@ class Dialect(BaseDialect):
         )
         env.filters["camel_case"] = to_camel_case
         env.filters["snake_case"] = to_snake_case
+        env.filters["urlencode"] = to_query_string
+        env.filters["jsondump"] = jsondump
 
         self.template_env = env
 

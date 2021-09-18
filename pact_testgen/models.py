@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Extra, conint, Field
+from pydantic import BaseModel, Extra, conint, Field, validator
 
 try:
     from typing import Literal
@@ -50,23 +50,14 @@ class Headers(BaseModel):
 
 
 class Method(Enum):
-    connect = "connect"
     CONNECT = "CONNECT"
-    delete = "delete"
     DELETE = "DELETE"
-    get = "get"
     GET = "GET"
-    head = "head"
     HEAD = "HEAD"
-    options = "options"
     OPTIONS = "OPTIONS"
-    patch = "patch"
     PATCH = "PATCH"
-    post = "post"
     POST = "POST"
-    put = "put"
     PUT = "PUT"
-    trace = "trace"
     TRACE = "TRACE"
 
 
@@ -76,6 +67,10 @@ class PactRequest(BaseModel):
     method: Method
     path: str
     query: Optional[Dict[str, List[str]]]
+
+    @validator("method", pre=True)
+    def validate_method(cls, v):
+        return v.upper()
 
 
 class PactResponse(BaseModel):
@@ -119,7 +114,8 @@ class Pact(BaseModel):
 class RequestArgs(BaseModel):
     method: str
     path: str
-    data: str = ""
+    data: Optional[Dict]
+    query_params: Optional[Dict]
     content_type: str = "application/json"
 
 
