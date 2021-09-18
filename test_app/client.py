@@ -14,14 +14,20 @@ class LibraryClient:
 
     # CRUD methods
 
-    def create_author(self, name: str):
-        return self.make_request("POST", "/authors", json={"name": name})
+    def create_author(self, name: str, is_featured=False):
+        return self.make_request(
+            "POST", "/authors", json={"name": name, "is_featured": is_featured}
+        )
 
     def get_author(self, author_id: int):
         return self.make_request("GET", f"/authors/{author_id}")
 
-    def update_author(self, author_id, name: str):
-        return self.make_request("PATCH", f"/authors/{author_id}", json={"name": name})
+    def update_author(self, author_id, name: str, is_featured=False):
+        return self.make_request(
+            "PATCH",
+            f"/authors/{author_id}",
+            json={"name": name, "is_featured": is_featured},
+        )
 
     def delete_author(self, author_id):
         return self.make_request("DELETE", f"/authors/{author_id}")

@@ -12,7 +12,8 @@
         "method": "POST",
         "path": "/authors",
         "body": {
-          "name": "Neal Stephenson"
+          "name": "Neal Stephenson",
+          "is_featured": false
         }
       },
       "response": {
@@ -81,14 +82,16 @@
         "method": "PATCH",
         "path": "/authors/1",
         "body": {
-          "name": "Helene Wecker"
+          "name": "Helene Wecker",
+          "is_featured": true
         }
       },
       "response": {
         "status": 200,
         "body": {
           "name": "Helene Wecker",
-          "id": 1
+          "id": 1,
+          "is_featured": true
         },
         "matchingRules": {
           "body": {
@@ -180,6 +183,34 @@
             }
           }
         }
+      }
+    },
+    {
+      "providerStates": [
+        {
+          "name": "An Author",
+          "params": {
+            "id": 1
+          }
+        },
+        {
+          "name": "A Book exists with author ID 1",
+          "params": {}
+        }
+      ],
+      "description": "A book search request for author ID 2",
+      "request": {
+        "method": "GET",
+        "path": "/books",
+        "query": {
+          "authorId": [
+            "2"
+          ]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": []
       }
     }
   ],

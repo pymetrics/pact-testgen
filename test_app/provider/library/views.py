@@ -14,11 +14,13 @@ ParsedJSON = Union[List, Dict[str, Any]]
 
 class AuthorCreateUpdateRequest(BaseModel):
     name: str
+    is_featured: bool
 
 
 class AuthorSerializer(BaseModel):
     id: int
     name: str
+    is_featured: bool
 
 
 class BookSerializer(BaseModel):
@@ -34,9 +36,14 @@ def to_pydantic_model(model: Type[BaseModel], request: HttpRequest):
 def create_author(request):
     if request.method == "POST":
         author_request = to_pydantic_model(AuthorCreateUpdateRequest, request)
-        author = Author.objects.create(name=author_request.name)
+        author = Author.objects.create(
+            name=author_request.name, is_featured=author_request.is_featured
+        )
         return JsonResponse(
-            AuthorSerializer(id=author.id, name=author.name).dict(), status=201
+            AuthorSerializer(
+                id=author.id, name=author.name, is_featured=author.is_featured
+            ).dict(),
+            status=201,
         )
     return HttpResponseNotAllowed(permitted_methods=["POST"])
 
@@ -47,15 +54,24 @@ def get_or_update_author(request, author_id):
         update_request = to_pydantic_model(AuthorCreateUpdateRequest, request)
         author = get_object_or_404(Author, id=author_id)
         author.name = update_request.name
+        author.is_featured = update_request.is_featured
         author.save()
-        return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict())
+        return JsonResponse(
+            AuthorSerializer(
+                id=author.id, name=author.name, is_featured=author.is_featured
+            ).dict()
+        )
     elif request.method == "DELETE":
         author = get_object_or_404(Author, id=author_id)
         author.delete()
         return HttpResponse(status=204)
     elif request.method == "GET":
         author = get_object_or_404(Author, id=author_id)
-        return JsonResponse(AuthorSerializer(id=author.id, name=author.name).dict())
+        return JsonResponse(
+            AuthorSerializer(
+                id=author.id, name=author.name, is_featured=author.is_featured
+            ).dict()
+        )
 
     return HttpResponseNotAllowed(permitted_methods=["PATCH", "DELETE"])
 

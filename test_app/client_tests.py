@@ -22,7 +22,7 @@ def library_client(pact):
 
 def test_create_author(pact, library_client: LibraryClient):
     name = "Neal Stephenson"
-    request_body = {"name": name}
+    request_body = {"name": name, "is_featured": False}
     expected = {"name": name, "id": Like(1)}
 
     (
@@ -51,15 +51,18 @@ def test_get_author(pact, library_client: LibraryClient):
 
 
 def test_update_author(pact, library_client: LibraryClient):
+    expected = {"name": "Helene Wecker", "id": Like(1), "is_featured": True}
     (
         pact.given("An Author", id=1)
         .upon_receiving("An author update request")
-        .with_request("PATCH", "/authors/1", body={"name": "Helene Wecker"})
-        .will_respond_with(200, body={"name": "Helene Wecker", "id": Like(1)})
+        .with_request(
+            "PATCH", "/authors/1", body={"name": "Helene Wecker", "is_featured": True}
+        )
+        .will_respond_with(200, body=expected)
     )
 
     with pact:
-        library_client.update_author(1, "Helene Wecker")
+        library_client.update_author(1, "Helene Wecker", is_featured=True)
 
 
 def test_delete_author(pact, library_client: LibraryClient):
@@ -98,3 +101,16 @@ def test_get_books_by_author_success(pact, library_client: LibraryClient):
 
     with pact:
         library_client.get_books_by_author(1)
+
+
+def test_get_books_by_author_no_results(pact, library_client: LibraryClient):
+    (
+        pact.given("An Author", id=1)
+        .and_given("A Book exists with author ID 1")
+        .upon_receiving("A book search request for author ID 2")
+        .with_request("GET", "/books", query={"authorId": ["2"]})
+        .will_respond_with(200, body=[])
+    )
+
+    with pact:
+        library_client.get_books_by_author(2)

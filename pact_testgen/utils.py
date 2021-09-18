@@ -1,3 +1,6 @@
+import json
+from typing import Any, Dict, List
+from urllib.parse import urlencode
 from slugify import slugify
 
 
@@ -21,3 +24,11 @@ def to_camel_case(value: str) -> str:
 
 def to_snake_case(value: str) -> str:
     return slugify(value.lower()).replace("-", "_")
+
+
+def to_query_string(data: Dict[str, List[Any]]) -> str:
+    return urlencode(data, doseq=True)
+
+
+def jsondump(data) -> str:
+    return json.dumps(data)
