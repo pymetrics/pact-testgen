@@ -2,11 +2,16 @@
 History
 =======
 
+0.4.3 (2021-09-20)
+------------------
+
+* Fix file handling for merge provider state file option.
+
+
 0.4.2 (2021-09-18)
 ------------------
 
 * Improve handling of request data.
-
 
 
 0.4.1 (2021-09-17)

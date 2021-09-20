@@ -35,18 +35,18 @@ def write_test_file(testfile: str, path: Path):
 
 
 def write_provider_state_file(
-    provider_state_file: str, path: Path, merge=False
+    provider_state_file: str, path: Path, merge_file=False
 ) -> ProviderStateFileOutcome:
     # TODO: Support appending new provider state functions.
     # For now, don't write the file if it already exists
     exists = path.exists()
     if exists:
-        if merge:
-            with open(path, "w") as target_handle:
+        if merge_file:
+            with open(path, "r+") as target_handle:
                 target = target_handle.read()
                 final, num_added_functions = merge(target, provider_state_file)
-                target.seek(0)
-                target.write(final)
+                target_handle.seek(0)
+                target_handle.write(final)
             if num_added_functions:
                 return ProviderStateFileOutcome.MERGED
             return ProviderStateFileOutcome.NO_CHANGES_REQUIRED

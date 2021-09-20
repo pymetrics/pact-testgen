@@ -3,4 +3,4 @@
 # This is silly, but MacOS doesn't have realpath
 HERE=(`python -c "import os, sys; print(os.path.dirname(os.path.abspath('$0')))"`)
 
-pact-testgen pactfiles/LibraryClient-Library-pact.json  $HERE/provider/tests --debug
+pact-testgen -m pactfiles/LibraryClient-Library-pact.json  $HERE/provider/tests --debug

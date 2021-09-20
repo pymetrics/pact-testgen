@@ -42,7 +42,7 @@ def run(
     provider_state_file_path = output_dir / provider_state_file_name
     write_test_file(format(test_file), test_file_path)
     ps_file_outcome = write_provider_state_file(
-        format(provider_state_file), provider_state_file_path, merge=merge_ps_file
+        format(provider_state_file), provider_state_file_path, merge_file=merge_ps_file
     )
     if not quiet:
         print(f"Wrote test file {test_file_path}")
