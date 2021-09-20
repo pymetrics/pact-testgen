@@ -1,0 +1,9 @@
+services:
+    # http://localhost:9292/hal-browser/browser.html
+    broker:
+        image: pactfoundation/pact-broker
+        environment:
+            PACT_BROKER_DATABASE_ADAPTER: sqlite
+            PACT_BROKER_DATABASE_NAME: broker.sqlite
+        ports:
+            - 9292:9292
