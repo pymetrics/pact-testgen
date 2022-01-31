@@ -9,10 +9,17 @@ PACTS_DIR = Path(__file__).parent / "pactfiles"
 
 
 @pytest.fixture(scope="session")
-def pact():
-    return Consumer("LibraryClient").has_pact_with(
-        Provider("Library"), pact_dir=PACTS_DIR, version="3.0.0"
+def pact_session():
+    return Consumer("TestConsumer").has_pact_with(
+        Provider("TestProvider"), pact_dir=PACTS_DIR, version="3.0.0"
     )
+
+
+@pytest.fixture
+def pact(pact_session):
+    # Workaround for https://github.com/reecetech/pactman/issues/111
+    pact_session._interactions[:] = []
+    return pact_session
 
 
 @pytest.fixture
