@@ -104,7 +104,11 @@ def main():
         parser.error("Merge provider state file is only available in Python 3.9+.")
 
     if args.consumer_name:
-        broker_config = BrokerConfig(base_url=args.broker_base_url)
+        broker_config = BrokerConfig(
+            base_url=args.broker_base_url,
+            username=args.broker_username,
+            password=args.broker.password,
+        )
     else:
         broker_config = None
 

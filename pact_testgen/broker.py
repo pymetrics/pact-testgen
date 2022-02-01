@@ -1,9 +1,29 @@
 import urllib
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import requests
 from pydantic import BaseSettings, Field
+from pydantic.env_settings import InitSettingsSource, SettingsSourceCallable
+
 from .models import Pact
+
+
+# For broker settings, we want to allow passing None for username
+# and password, and revert to loading from the environment. Howerver,
+# we also want to prioritize username and password if they are passed
+# as init kwargs, but are not None. This pattern simplifies CLI option
+# handling, at the expense of additional complexity here.
+
+
+class InitSettingsSourceIgnoreNone(InitSettingsSource):
+    """
+    An InitSettingsSource that does not propagate arguments
+    with a value of None.
+    """
+
+    def __init__(self, init_kwargs: Dict[str, Any]):
+        self.init_kwargs = {k: v for k, v in init_kwargs.items() if v is not None}
+        print(f"InitSettingsSourceIgnoreNone.init_kwargs={self.init_kwargs}")
 
 
 class BrokerConfig(BaseSettings):
@@ -15,6 +35,19 @@ class BrokerConfig(BaseSettings):
 
     class Config:
         env_prefix = "pact_broker_"
+
+        @classmethod
+        def customise_sources(
+            cls,
+            init_settings: SettingsSourceCallable,
+            env_settings: SettingsSourceCallable,
+            file_secret_settings: SettingsSourceCallable,
+        ) -> Tuple[SettingsSourceCallable, ...]:
+            return (
+                InitSettingsSourceIgnoreNone(init_settings.init_kwargs),
+                env_settings,
+                file_secret_settings,
+            )
 
     @property
     def auth_tuple(self) -> Optional[Tuple[str, str]]:
