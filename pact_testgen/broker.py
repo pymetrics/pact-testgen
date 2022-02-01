@@ -9,7 +9,7 @@ from .models import Pact
 
 
 # For broker settings, we want to allow passing None for username
-# and password, and revert to loading from the environment. Howerver,
+# and password, and revert to loading from the environment. However,
 # we also want to prioritize username and password if they are passed
 # as init kwargs, but are not None. This pattern simplifies CLI option
 # handling, at the expense of additional complexity here.
@@ -17,7 +17,7 @@ from .models import Pact
 
 class InitSettingsSourceIgnoreNone(InitSettingsSource):
     """
-    An InitSettingsSource that does not propagate arguments
+    An InitSettingsSource that ignores arguments
     with a value of None.
     """
 
