@@ -107,7 +107,7 @@ install: clean ## install the package to the active Python's site-packages
 # Pact broker
 # Install from https://github.com/pact-foundation/pact-ruby-standalone/releases
 
-broker-publish:
+broker-publish:  ## Publish test app pact contract to the pact broker
 	pact-broker publish \
 	test_app/pactfiles/TestConsumer-TestProvider-pact.json \
 	--consumer-app-version=`git rev-parse --short HEAD` \
