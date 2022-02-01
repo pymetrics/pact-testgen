@@ -23,6 +23,8 @@ export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+export PACT_BROKER_BASE_URL=http://localhost:9292
+
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
@@ -100,3 +102,13 @@ dist: clean ## builds source and wheel package
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
+
+
+# Pact broker
+# Install from https://github.com/pact-foundation/pact-ruby-standalone/releases
+
+broker-publish:
+	pact-broker publish \
+	test_app/pactfiles/TestConsumer-TestProvider-pact.json \
+	--consumer-app-version=`git rev-parse --short HEAD` \
+	--tag=DEV

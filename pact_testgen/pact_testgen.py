@@ -3,6 +3,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+from pact_testgen.broker import BrokerConfig
 from pact_testgen.dialects.base import PythonFormatter
 from pact_testgen.dialects.django import Dialect
 from pact_testgen.files import (
@@ -20,12 +21,17 @@ from pact_testgen.models import (
     TestFile,
     TestMethodArgs,
 )
+from pact_testgen.broker import get_pact_from_broker
 
 
 def run(
     base_class: str,
-    pact_file: str,
     output_dir: Path,
+    pact_file: str = None,
+    broker_config: BrokerConfig = None,
+    provider_name: str = None,
+    consumer_name: str = None,
+    consumer_version: str = None,
     test_file_name="test_pact.py",
     provider_state_file_name="provider_states.py",
     line_length=88,
@@ -33,7 +39,17 @@ def run(
     merge_ps_file=False,
 ):
     """Loads the pact file, and writes the generated output files to output_dir"""
-    pact = load_pact_file(pact_file)
+    if not (pact_file or broker_config):
+        raise ValueError("Must provide pact file or broker config.")
+    if pact_file:
+        pact = load_pact_file(pact_file)
+    else:
+        pact = get_pact_from_broker(
+            broker_config=broker_config,
+            provider_name=provider_name,
+            consumer_name=consumer_name,
+            version=consumer_version,
+        )
     test_file = convert_to_test_cases(pact, base_class)
     dialect = Dialect()
     test_file, provider_state_file = generate_tests(test_file, dialect)
