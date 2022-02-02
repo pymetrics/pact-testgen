@@ -76,6 +76,12 @@ def _build_contract_url(
     return urllib.parse.urljoin(base_url, path)
 
 
+def _make_broker_request(url: str, auth: Optional[Tuple[str, str]] = None) -> Dict:
+    resp = requests.get(url, auth=auth)
+    resp.raise_for_status()
+    return resp.json()
+
+
 def get_pact_from_broker(
     broker_config: BrokerConfig,
     provider_name: str,
@@ -88,6 +94,5 @@ def get_pact_from_broker(
     url = _build_contract_url(
         broker_config.base_url, provider_name, consumer_name, version=version
     )
-    resp = requests.get(url, auth=broker_config.auth_tuple)
-    resp.raise_for_status()
-    return Pact(**resp.json())
+    data = _make_broker_request(url, auth=broker_config.auth_tuple)
+    return Pact(**data)

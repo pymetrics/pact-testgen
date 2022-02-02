@@ -1,15 +1,6 @@
-from unittest.mock import patch
-import pytest
 from pact_testgen.broker import BrokerConfig
 
-
-class patch_env(patch.dict):
-    """
-    Patch environment variables. Clears by default. Use just like patch.dict.
-    """
-
-    def __init__(self, values=(), clear=True, **kwargs):
-        super().__init__("os.environ", values=values, clear=clear, **kwargs)
+from .utils import patch_env
 
 
 DEFAULTS = {
