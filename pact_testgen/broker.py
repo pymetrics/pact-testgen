@@ -3,27 +3,9 @@ from typing import Any, Dict, Optional, Tuple
 
 import requests
 from pydantic import BaseSettings, Field
-from pydantic.env_settings import InitSettingsSource, SettingsSourceCallable
+from pydantic.env_settings import SettingsSourceCallable, InitSettingsSource
 
 from .models import Pact
-
-
-# For broker settings, we want to allow passing None for username
-# and password, and revert to loading from the environment. However,
-# we also want to prioritize username and password if they are passed
-# as init kwargs, but are not None. This pattern simplifies CLI option
-# handling, at the expense of additional complexity here.
-
-
-class InitSettingsSourceIgnoreNone(InitSettingsSource):
-    """
-    An InitSettingsSource that ignores arguments
-    with a value of None.
-    """
-
-    def __init__(self, init_kwargs: Dict[str, Any]):
-        self.init_kwargs = {k: v for k, v in init_kwargs.items() if v is not None}
-        print(f"InitSettingsSourceIgnoreNone.init_kwargs={self.init_kwargs}")
 
 
 class BrokerConfig(BaseSettings):
@@ -36,6 +18,11 @@ class BrokerConfig(BaseSettings):
     class Config:
         env_prefix = "pact_broker_"
 
+        # For broker settings, we want to allow passing None for username
+        # and password, and revert to loading from the environment. However,
+        # we also want to prioritize username and password if they are passed
+        # as init kwargs, but are not None. This pattern simplifies CLI option
+        # handling, at the expense of additional complexity here.
         @classmethod
         def customise_sources(
             cls,
@@ -44,7 +31,9 @@ class BrokerConfig(BaseSettings):
             file_secret_settings: SettingsSourceCallable,
         ) -> Tuple[SettingsSourceCallable, ...]:
             return (
-                InitSettingsSourceIgnoreNone(init_settings.init_kwargs),
+                InitSettingsSource(
+                    _remove_items_with_value_none(init_settings.init_kwargs)
+                ),
                 env_settings,
                 file_secret_settings,
             )
@@ -96,3 +85,7 @@ def get_pact_from_broker(
     )
     data = _make_broker_request(url, auth=broker_config.auth_tuple)
     return Pact(**data)
+
+
+def _remove_items_with_value_none(d: dict) -> Dict:
+    return {k: v for k, v in d.items() if v is not None}
