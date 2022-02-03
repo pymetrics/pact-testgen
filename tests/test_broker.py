@@ -38,7 +38,8 @@ def test_build_broker_url_formatting_escapes():
         consumer_name="Test Consumer",
     )
     assert url == (
-        f"{BROKER_BASE_URL}/pacts/provider/Test%20Provider/consumer/Test%20Consumer/latest"
+        f"{BROKER_BASE_URL}/pacts/provider/Test%20Provider"
+        "/consumer/Test%20Consumer/latest"
     )
 
 
@@ -48,7 +49,8 @@ def test_build_broker_url_with_consumer_version():
         BROKER_BASE_URL, provider_name=PROVIDER, consumer_name=CONSUMER, version=VERSION
     )
     assert url == (
-        f"{BROKER_BASE_URL}/pacts/provider/{PROVIDER}/consumer/{CONSUMER}/version/{VERSION}"
+        f"{BROKER_BASE_URL}/pacts/provider/{PROVIDER}"
+        f"/consumer/{CONSUMER}/version/{VERSION}"
     )
 
 

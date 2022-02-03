@@ -3,7 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 from pact_testgen import __version__
-from pact_testgen.broker import BrokerConfig
+from pact_testgen.broker import BrokerBasicAuthConfig, BrokerConfig
 from pact_testgen.pact_testgen import run
 from pact_testgen.files import merge_is_available
 
@@ -80,6 +80,7 @@ def main():
         help="Consumer version number. Used to retrieve the Pact contract from the "
         "Pact broker. Optional, defaults to 'latest'.",
     )
+
     args = parser.parse_args()
 
     # Either both, or neither, i.e. logical XNOR
@@ -106,8 +107,10 @@ def main():
     if args.consumer_name:
         broker_config = BrokerConfig(
             base_url=args.broker_base_url,
-            username=args.broker_username,
-            password=args.broker.password,
+            auth=BrokerBasicAuthConfig(
+                username=args.broker_username,
+                password=args.broker.password,
+            ),
         )
     else:
         broker_config = None
