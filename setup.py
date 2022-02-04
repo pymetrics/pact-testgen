@@ -10,7 +10,7 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-requirements = ["jinja2", "pydantic", "pactman", "python-slugify", "black"]
+requirements = ["jinja2", "pydantic", "pactman", "python-slugify", "black", "requests"]
 
 # Install typing_extensions on Python 3.7
 if sys.version_info < (3, 8):

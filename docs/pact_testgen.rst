@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+pact\_testgen.broker module
+---------------------------
+
+.. automodule:: pact_testgen.broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 pact\_testgen.cli module
 ------------------------
 
