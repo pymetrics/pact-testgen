@@ -1,11 +1,14 @@
 """Console script for pact_testgen."""
 import argparse
+import os
 import sys
 from pathlib import Path
+from typing import Callable, Dict
+
 from pact_testgen import __version__
 from pact_testgen.broker import BrokerBasicAuthConfig, BrokerConfig
-from pact_testgen.pact_testgen import run
 from pact_testgen.files import merge_is_available
+from pact_testgen.pact_testgen import RunOptions, run
 
 
 def directory(path: str) -> Path:
@@ -15,8 +18,31 @@ def directory(path: str) -> Path:
     raise argparse.ArgumentError()
 
 
-def main():
-    """Console script for pact_testgen."""
+ENV_MAP = {
+    # CLI store name -> env var name
+    "broker_base_url": "PACT_BROKER_BASE_URL",
+    "broker_username": "PACT_BROKER_USERNAME",
+    "broker_password": "PACT_BROKER_PASSWORD",
+    "consumer_name": "PACT_BROKER_CONSUMER_NAME",
+    "provider_name": "PACT_BROKER_PROVIDER_NAME",
+    "consumer_version": "PACT_BROKER_CONSUMER_VERSION",
+}
+
+
+def get_env_namespace(mapping: Dict[str, str] = ENV_MAP) -> argparse.Namespace:
+    """
+    Create a Namespace populated from environment variables.
+    Takes a mapping of namespace store names -> env var names.
+    """
+    ns_kwargs = {}
+    for store_name, env_var in mapping.items():
+        value = os.environ.get(env_var)
+        if value is not None:
+            ns_kwargs[store_name] = value
+    return argparse.Namespace(**ns_kwargs)
+
+
+def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "output_dir", help="Output for generated Python files.", type=directory
@@ -80,30 +106,32 @@ def main():
         help="Consumer version number. Used to retrieve the Pact contract from the "
         "Pact broker. Optional, defaults to 'latest'.",
     )
+    return parser
 
-    args = parser.parse_args()
+
+def validate_namespace(args: argparse.Namespace, error_func: Callable[[str], None]):
 
     # Either both, or neither, i.e. logical XNOR
     if bool(args.consumer_name) ^ bool(args.provider_name):
-        parser.error(
-            "Must specify both --provider-name and --consumer-name, or neither."
-        )
+        error_func("Must specify both --provider-name and --consumer-name, or neither.")
 
     if args.broker_base_url and not args.consumer_name:
-        parser.error("Must specify consumer and provider names with pact broker URL.")
+        error_func("Must specify consumer and provider names with pact broker URL.")
 
     if args.pact_file and args.consumer_name:
-        parser.error("Specify either pact file or pact broker options, not both.")
+        error_func("Specify either pact file or pact broker options, not both.")
 
     if not (args.pact_file or args.consumer_name):
-        parser.error("Must provide a pact file with -f, or pact broker options.")
+        error_func("Must provide a pact file with -f, or pact broker options.")
 
     if args.consumer_version and not args.consumer_name:
-        parser.error("Must specify consumer name with consumer version.")
+        error_func("Must specify consumer name with consumer version.")
 
     if args.merge_provider_state_file and not merge_is_available():
-        parser.error("Merge provider state file is only available in Python 3.9+.")
+        error_func("Merge provider state file is only available in Python 3.9+.")
 
+
+def build_run_options(args: argparse.Namespace) -> RunOptions:
     if args.consumer_name:
         broker_config = BrokerConfig(
             base_url=args.broker_base_url,
@@ -115,18 +143,30 @@ def main():
     else:
         broker_config = None
 
+    return RunOptions(
+        base_class=args.base_class,
+        pact_file=args.pact_file,
+        broker_config=broker_config,
+        provider_name=args.provider_name,
+        consumer_name=args.consumer_name,
+        consumer_version=args.consumer_version,
+        output_dir=args.output_dir,
+        line_length=args.line_length,
+        merge_ps_file=args.merge_provider_state_file,
+    )
+
+
+def main():
+    """Console script for pact_testgen."""
+    parser = _build_parser()
+
+    # Parse CLI args, adding or overriding to a Namespace created from env vars.
+    args = parser.parse_args(namespace=get_env_namespace())
+    validate_namespace(args, error_func=parser.error)
+
     try:
-        run(
-            base_class=args.base_class,
-            pact_file=args.pact_file,
-            broker_config=broker_config,
-            provider_name=args.provider_name,
-            consumer_name=args.consumer_name,
-            consumer_version=args.consumer_version,
-            output_dir=args.output_dir,
-            line_length=args.line_length,
-            merge_ps_file=args.merge_provider_state_file,
-        )
+        opts = build_run_options(args)
+        run(opts)
         return 0
     except Exception as e:
         if args.debug:
