@@ -3,7 +3,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Callable, Dict
+from typing import Callable, Dict, List, Optional
 
 from pact_testgen import __version__
 from pact_testgen.broker import BrokerBasicAuthConfig, BrokerConfig
@@ -144,15 +144,16 @@ def validate_namespace(args: argparse.Namespace, error_func: Callable[[str], Non
         error_func(ErrorMessage.MERGE_NOT_AVAILABLE)
 
 
-def build_run_options(args: argparse.Namespace) -> RunOptions:
+def run_options_from_namespace(args: argparse.Namespace) -> RunOptions:
     if args.consumer_name:
-        broker_config = BrokerConfig(
-            base_url=args.broker_base_url,
-            auth=BrokerBasicAuthConfig(
+        if args.broker_username and args.broker_password:
+            auth = BrokerBasicAuthConfig(
                 username=args.broker_username,
                 password=args.broker_password,
-            ),
-        )
+            )
+        else:
+            auth = None
+        broker_config = BrokerConfig(base_url=args.broker_base_url, auth=auth)
     else:
         broker_config = None
 
@@ -169,20 +170,25 @@ def build_run_options(args: argparse.Namespace) -> RunOptions:
     )
 
 
+def build_run_options(args: Optional[List[str]] = None) -> RunOptions:
+    # Pass args in for testing purposes, leave none to parse args
+    # provided at CLI.
+    parser = _build_parser()
+    # Parse CLI args, adding or overriding to a Namespace created from env vars.
+    ns = parser.parse_args(args=args, namespace=get_env_namespace())
+    validate_namespace(ns, error_func=parser.error)
+    return run_options_from_namespace(ns)
+
+
 def main():
     """Console script for pact_testgen."""
-    parser = _build_parser()
-
-    # Parse CLI args, adding or overriding to a Namespace created from env vars.
-    args = parser.parse_args(namespace=get_env_namespace())
-    validate_namespace(args, error_func=parser.error)
-
+    opts = None
     try:
-        opts = build_run_options(args)
+        opts = build_run_options()
         run(opts)
         return 0
     except Exception as e:
-        if args.debug:
+        if not opts or opts.debug:
             raise
         print(f"An error occurred: {e}", file=sys.stderr)
         return 1

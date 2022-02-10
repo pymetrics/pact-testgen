@@ -1,8 +1,11 @@
-import pytest
-from pact_testgen import cli
+from argparse import Namespace
 from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
-from argparse import Namespace
+
+import pytest
+
+from pact_testgen import cli
+
 from .utils import patch_env
 
 
@@ -180,13 +183,45 @@ def test_indeterminate_pactfile_source(
     assert error.message == cli.ErrorMessage.INDETERMINATE_SOURCE
 
 
-def test_build_run_options_pactfile(namespace_pactfile):
-    opts = cli.build_run_options(namespace_pactfile)
+def test_run_options_from_namespace_pactfile(namespace_pactfile):
+    opts = cli.run_options_from_namespace(namespace_pactfile)
     assert opts.pact_file
     assert opts.broker_config is None
 
 
-def test_build_run_options_broker(namespace_broker):
-    opts = cli.build_run_options(namespace_broker)
+def test_run_options_from_namespace_broker(namespace_broker):
+    opts = cli.run_options_from_namespace(namespace_broker)
     assert opts.broker_config is not None
     assert isinstance(opts.broker_config, cli.BrokerConfig)
+
+
+@patch_env()
+def test_get_env_namespace_does_not_contain_unset_values():
+    ns = cli.get_env_namespace()
+    assert ns == Namespace()
+
+
+@patch_env({"PACT_BROKER_BASE_URL": ENV_DEFAULTS["PACT_BROKER_BASE_URL"]})
+def test_broker_base_url_as_env_var(dir):
+    args = [str(dir), "-s", "TestProvider", "-c", "TestConsumer"]
+    opts = cli.build_run_options(args=args)
+    assert opts.broker_config is not None
+    assert opts.broker_config.base_url == ENV_DEFAULTS["PACT_BROKER_BASE_URL"]
+    assert opts.consumer_name == "TestConsumer"
+    assert opts.provider_name == "TestProvider"
+
+
+@patch_env({"PACT_BROKER_BASE_URL": "http://from-env"})
+def test_cli_args_override_env_vars(dir):
+    args = [
+        str(dir),
+        "-b",
+        ENV_DEFAULTS["PACT_BROKER_BASE_URL"],
+        "-s",
+        "TestProvider",
+        "-c",
+        "TestConsumer",
+    ]
+    opts = cli.build_run_options(args=args)
+    assert opts.broker_config is not None
+    assert opts.broker_config.base_url == ENV_DEFAULTS["PACT_BROKER_BASE_URL"]
