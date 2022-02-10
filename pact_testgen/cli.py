@@ -1,11 +1,14 @@
 """Console script for pact_testgen."""
 import argparse
+import os
 import sys
 from pathlib import Path
+from typing import Callable, Dict, List, Optional
+
 from pact_testgen import __version__
 from pact_testgen.broker import BrokerBasicAuthConfig, BrokerConfig
-from pact_testgen.pact_testgen import run
 from pact_testgen.files import merge_is_available
+from pact_testgen.pact_testgen import RunOptions, run
 
 
 def directory(path: str) -> Path:
@@ -15,8 +18,44 @@ def directory(path: str) -> Path:
     raise argparse.ArgumentError()
 
 
-def main():
-    """Console script for pact_testgen."""
+ENV_MAP = {
+    # CLI store name -> env var name
+    "broker_base_url": "PACT_BROKER_BASE_URL",
+    "broker_username": "PACT_BROKER_USERNAME",
+    "broker_password": "PACT_BROKER_PASSWORD",
+    "consumer_name": "PACT_BROKER_CONSUMER_NAME",
+    "provider_name": "PACT_BROKER_PROVIDER_NAME",
+    "consumer_version": "PACT_BROKER_CONSUMER_VERSION",
+}
+
+
+class ErrorMessage:
+    MISSING_PROVIDER_OR_CONSUMER = (
+        "Must specify both --provider-name and --consumer-name, or neither."
+    )
+    MISSING_PACTICIPANT = (
+        "Must specify consumer and provider names with pact broker URL."
+    )
+    INDETERMINATE_SOURCE = "Specify either pact file or pact broker options, not both."
+    MISSING_SOURCE = "Must provide a pact file with -f, or pact broker options."
+    MISSING_CONSUMER_NAME = "Must specify consumer name with consumer version."
+    MERGE_NOT_AVAILABLE = "Merge provider state file is only available in Python 3.9+."
+
+
+def get_env_namespace(mapping: Dict[str, str] = ENV_MAP) -> argparse.Namespace:
+    """
+    Create a Namespace populated from environment variables.
+    Takes a mapping of namespace store names -> env var names.
+    """
+    ns_kwargs = {}
+    for store_name, env_var in mapping.items():
+        value = os.environ.get(env_var)
+        if value is not None:
+            ns_kwargs[store_name] = value
+    return argparse.Namespace(**ns_kwargs)
+
+
+def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "output_dir", help="Output for generated Python files.", type=directory
@@ -80,56 +119,76 @@ def main():
         help="Consumer version number. Used to retrieve the Pact contract from the "
         "Pact broker. Optional, defaults to 'latest'.",
     )
+    return parser
 
-    args = parser.parse_args()
+
+def validate_namespace(args: argparse.Namespace, error_func: Callable[[str], None]):
 
     # Either both, or neither, i.e. logical XNOR
     if bool(args.consumer_name) ^ bool(args.provider_name):
-        parser.error(
-            "Must specify both --provider-name and --consumer-name, or neither."
-        )
+        error_func(ErrorMessage.MISSING_PROVIDER_OR_CONSUMER)
 
     if args.broker_base_url and not args.consumer_name:
-        parser.error("Must specify consumer and provider names with pact broker URL.")
+        error_func(ErrorMessage.MISSING_PACTICIPANT)
 
     if args.pact_file and args.consumer_name:
-        parser.error("Specify either pact file or pact broker options, not both.")
+        error_func(ErrorMessage.INDETERMINATE_SOURCE)
 
     if not (args.pact_file or args.consumer_name):
-        parser.error("Must provide a pact file with -f, or pact broker options.")
+        error_func(ErrorMessage.MISSING_SOURCE)
 
     if args.consumer_version and not args.consumer_name:
-        parser.error("Must specify consumer name with consumer version.")
+        error_func(ErrorMessage.MISSING_CONSUMER_NAME)
 
     if args.merge_provider_state_file and not merge_is_available():
-        parser.error("Merge provider state file is only available in Python 3.9+.")
+        error_func(ErrorMessage.MERGE_NOT_AVAILABLE)
 
+
+def run_options_from_namespace(args: argparse.Namespace) -> RunOptions:
     if args.consumer_name:
-        broker_config = BrokerConfig(
-            base_url=args.broker_base_url,
-            auth=BrokerBasicAuthConfig(
+        if args.broker_username and args.broker_password:
+            auth = BrokerBasicAuthConfig(
                 username=args.broker_username,
-                password=args.broker.password,
-            ),
-        )
+                password=args.broker_password,
+            )
+        else:
+            auth = None
+        broker_config = BrokerConfig(base_url=args.broker_base_url, auth=auth)
     else:
         broker_config = None
 
+    return RunOptions(
+        base_class=args.base_class,
+        pact_file=args.pact_file,
+        broker_config=broker_config,
+        provider_name=args.provider_name,
+        consumer_name=args.consumer_name,
+        consumer_version=args.consumer_version,
+        output_dir=args.output_dir,
+        line_length=args.line_length,
+        merge_ps_file=args.merge_provider_state_file,
+    )
+
+
+def build_run_options(args: Optional[List[str]] = None) -> RunOptions:
+    # Pass args in for testing purposes, leave none to parse args
+    # provided at CLI.
+    parser = _build_parser()
+    # Parse CLI args, adding or overriding to a Namespace created from env vars.
+    ns = parser.parse_args(args=args, namespace=get_env_namespace())
+    validate_namespace(ns, error_func=parser.error)
+    return run_options_from_namespace(ns)
+
+
+def main():
+    """Console script for pact_testgen."""
+    opts = None
     try:
-        run(
-            base_class=args.base_class,
-            pact_file=args.pact_file,
-            broker_config=broker_config,
-            provider_name=args.provider_name,
-            consumer_name=args.consumer_name,
-            consumer_version=args.consumer_version,
-            output_dir=args.output_dir,
-            line_length=args.line_length,
-            merge_ps_file=args.merge_provider_state_file,
-        )
+        opts = build_run_options()
+        run(opts)
         return 0
     except Exception as e:
-        if args.debug:
+        if not opts or opts.debug:
             raise
         print(f"An error occurred: {e}", file=sys.stderr)
         return 1

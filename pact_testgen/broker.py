@@ -2,45 +2,17 @@ import urllib
 from typing import Dict, Optional, Tuple
 
 import requests
-from pydantic import BaseSettings
-from pydantic.env_settings import SettingsSourceCallable, InitSettingsSource
+from pydantic import BaseModel
 
 from .models import Pact
 
 
-class BrokerBaseSettings(BaseSettings):
-    pass
-
-    class Config:
-        env_prefix = "pact_broker_"
-
-        # For broker settings, we want to allow passing values of None
-        # and revert to loading from the environment. However,
-        # we also want to prioritize username and password if they are passed
-        # as init kwargs, but are not None. This pattern simplifies CLI option
-        # handling, at the expense of additional complexity here.
-        @classmethod
-        def customise_sources(
-            cls,
-            init_settings: SettingsSourceCallable,
-            env_settings: SettingsSourceCallable,
-            file_secret_settings: SettingsSourceCallable,
-        ) -> Tuple[SettingsSourceCallable, ...]:
-            return (
-                InitSettingsSource(
-                    _remove_items_with_value_none(init_settings.init_kwargs)
-                ),
-                env_settings,
-                file_secret_settings,
-            )
-
-
-class BrokerBasicAuthConfig(BrokerBaseSettings):
+class BrokerBasicAuthConfig(BaseModel):
     username: str
     password: str
 
 
-class BrokerConfig(BrokerBaseSettings):
+class BrokerConfig(BaseModel):
     # Same env vars as pact broker CLI client
     # https://github.com/pact-foundation/pact_broker-client#usage---cli
     base_url: str

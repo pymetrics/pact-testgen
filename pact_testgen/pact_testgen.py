@@ -1,9 +1,11 @@
 """Main module."""
 import sys
 from collections import defaultdict
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Optional
 
-from pact_testgen.broker import BrokerConfig
+from pact_testgen.broker import BrokerConfig, get_pact_from_broker
 from pact_testgen.dialects.base import PythonFormatter
 from pact_testgen.dialects.django import Dialect
 from pact_testgen.files import (
@@ -21,46 +23,50 @@ from pact_testgen.models import (
     TestFile,
     TestMethodArgs,
 )
-from pact_testgen.broker import get_pact_from_broker
 
 
-def run(
-    base_class: str,
-    output_dir: Path,
-    pact_file: str = None,
-    broker_config: BrokerConfig = None,
-    provider_name: str = None,
-    consumer_name: str = None,
-    consumer_version: str = None,
-    test_file_name="test_pact.py",
-    provider_state_file_name="provider_states.py",
-    line_length=88,
-    quiet=False,
-    merge_ps_file=False,
-):
+@dataclass
+class RunOptions:
+    base_class: str
+    output_dir: Path
+    pact_file: Optional[str]
+    broker_config: Optional[BrokerConfig]
+    provider_name: Optional[str]
+    consumer_name: Optional[str]
+    consumer_version: Optional[str]
+    test_file_name: str = field(default="test_pact.py")
+    provider_state_file_name: str = field(default="provider_states.py")
+    line_length: int = field(default=88)
+    quiet: bool = field(default=False)
+    merge_ps_file: bool = field(default=False)
+
+
+def run(opts: RunOptions):
     """Loads the pact file, and writes the generated output files to output_dir"""
-    if not (pact_file or broker_config):
+    if not (opts.pact_file or opts.broker_config):
         raise ValueError("Must provide pact file or broker config.")
-    if pact_file:
-        pact = load_pact_file(pact_file)
+    if opts.pact_file:
+        pact = load_pact_file(opts.pact_file)
     else:
         pact = get_pact_from_broker(
-            broker_config=broker_config,
-            provider_name=provider_name,
-            consumer_name=consumer_name,
-            version=consumer_version,
+            broker_config=opts.broker_config,
+            provider_name=opts.provider_name,
+            consumer_name=opts.consumer_name,
+            version=opts.consumer_version,
         )
-    test_file = convert_to_test_cases(pact, base_class)
+    test_file = convert_to_test_cases(pact, opts.base_class)
     dialect = Dialect()
     test_file, provider_state_file = generate_tests(test_file, dialect)
-    format = PythonFormatter(line_length=line_length).format
-    test_file_path = output_dir / test_file_name
-    provider_state_file_path = output_dir / provider_state_file_name
+    format = PythonFormatter(line_length=opts.line_length).format
+    test_file_path = opts.output_dir / opts.test_file_name
+    provider_state_file_path = opts.output_dir / opts.provider_state_file_name
     write_test_file(format(test_file), test_file_path)
     ps_file_outcome = write_provider_state_file(
-        format(provider_state_file), provider_state_file_path, merge_file=merge_ps_file
+        format(provider_state_file),
+        provider_state_file_path,
+        merge_file=opts.merge_ps_file,
     )
-    if not quiet:
+    if not opts.quiet:
         print(f"Wrote test file {test_file_path}")
         if ps_file_outcome == ProviderStateFileOutcome.WROTE_NEW:
             print(f"Wrote new provider state file {provider_state_file_path}")
