@@ -150,7 +150,7 @@ def build_run_options(args: argparse.Namespace) -> RunOptions:
             base_url=args.broker_base_url,
             auth=BrokerBasicAuthConfig(
                 username=args.broker_username,
-                password=args.broker.password,
+                password=args.broker_password,
             ),
         )
     else:
