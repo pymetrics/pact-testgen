@@ -29,6 +29,19 @@ ENV_MAP = {
 }
 
 
+class ErrorMessage:
+    MISSING_PROVIDER_OR_CONSUMER = (
+        "Must specify both --provider-name and --consumer-name, or neither."
+    )
+    MISSING_PACTICIPANT = (
+        "Must specify consumer and provider names with pact broker URL."
+    )
+    INDETERMINATE_SOURCE = "Specify either pact file or pact broker options, not both."
+    MISSING_SOURCE = "Must provide a pact file with -f, or pact broker options."
+    MISSING_CONSUMER_NAME = "Must specify consumer name with consumer version."
+    MERGE_NOT_AVAILABLE = "Merge provider state file is only available in Python 3.9+."
+
+
 def get_env_namespace(mapping: Dict[str, str] = ENV_MAP) -> argparse.Namespace:
     """
     Create a Namespace populated from environment variables.
@@ -113,22 +126,22 @@ def validate_namespace(args: argparse.Namespace, error_func: Callable[[str], Non
 
     # Either both, or neither, i.e. logical XNOR
     if bool(args.consumer_name) ^ bool(args.provider_name):
-        error_func("Must specify both --provider-name and --consumer-name, or neither.")
+        error_func(ErrorMessage.MISSING_PROVIDER_OR_CONSUMER)
 
     if args.broker_base_url and not args.consumer_name:
-        error_func("Must specify consumer and provider names with pact broker URL.")
+        error_func(ErrorMessage.MISSING_PACTICIPANT)
 
     if args.pact_file and args.consumer_name:
-        error_func("Specify either pact file or pact broker options, not both.")
+        error_func(ErrorMessage.INDETERMINATE_SOURCE)
 
     if not (args.pact_file or args.consumer_name):
-        error_func("Must provide a pact file with -f, or pact broker options.")
+        error_func(ErrorMessage.MISSING_SOURCE)
 
     if args.consumer_version and not args.consumer_name:
-        error_func("Must specify consumer name with consumer version.")
+        error_func(ErrorMessage.MISSING_CONSUMER_NAME)
 
     if args.merge_provider_state_file and not merge_is_available():
-        error_func("Merge provider state file is only available in Python 3.9+.")
+        error_func(ErrorMessage.MERGE_NOT_AVAILABLE)
 
 
 def build_run_options(args: argparse.Namespace) -> RunOptions:
