@@ -23,7 +23,6 @@ export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
-export PACT_BROKER_BASE_URL=http://localhost:9292
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -44,10 +43,10 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '__pycache__' -exec rm -fr {} +
 
 clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
-	rm -fr .pytest_cache
+	-rm -f .coverage
+	-rm -fr htmlcov/
+	-rm -fr .pytest_cache
+	-rm test_app/pactfiles/TestConsumer-TestProvider-pact.json
 
 lint: ## check style with flake8
 	flake8 pact_testgen tests
@@ -69,10 +68,10 @@ test: ## run tests quickly with the default Python
 
 test-integration: test-provider test  ## Run sample app + pact-testgen tests
 
-test-debug: test-client  ## Run tests, drop to debugger on failure
+test-debug: clean-test test-client  ## Run tests, drop to debugger on failure
 	pytest --pdb
 
-test-all: test-client testgen test-provider  ## run tests on every Python version with tox
+test-all: clean-test test-client testgen test-provider  ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python

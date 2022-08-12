@@ -22,10 +22,10 @@ def filename():
 
 
 @pytest.fixture
-def dir():
-    """Yields a temporary directory as a Path object"""
+def dir() -> str:
+    """Yields a temporary directory as a str"""
     with TemporaryDirectory() as d:
-        yield Path(d)
+        yield str(Path(d))
 
 
 class ErrorCallable:
@@ -53,48 +53,29 @@ def error() -> ErrorCallable:
 
 
 @pytest.fixture
-def namespace_pactfile(filename, dir) -> Namespace:
+def namespace_pactfile(parser, filename, dir) -> Namespace:
     """
-    Returns a default Namespace that should pass validation,
-    for the Pact file use case.
-    """
-    return Namespace(
-        pact_file=filename,
-        output_dir=dir,
-        base_class="django.test.TestCase",
-        line_length=88,
-        debug=False,
-        quiet=False,
-        merge_provider_state_file=False,
-        broker_base_url=None,
-        broker_username=None,
-        broker_password=None,
-        consumer_name=None,
-        provider_name=None,
-        consumer_version=None,
-    )
+    Return a namespace created with args for the pact file use case"""
+    return parser.parse_args([str(dir), "--pact-file", filename])
 
 
 @pytest.fixture
-def namespace_broker(filename, dir) -> Namespace:
+def namespace_broker(parser, dir) -> Namespace:
     """
     Returns a default Namespace that should pass validation,
     for the Pact Broker use case.
     """
-    return Namespace(
-        pact_file=None,
-        output_dir=dir,
-        base_class="django.test.TestCase",
-        line_length=88,
-        debug=False,
-        quiet=False,
-        merge_provider_state_file=False,
-        broker_base_url="http://localhost",
-        broker_username="username",
-        broker_password="password",
-        consumer_name="TestConsumer",
-        provider_name="TestProvider",
-        consumer_version=None,
+    return parser.parse_args(
+        [
+            dir,
+            # fmt: off
+            "--broker-base-url", "http://localhost",
+            "--broker-username", "username",
+            "--broker-password", "password",
+            "--consumer-name", "TestConsumer",
+            "--provider-name", "TestProvider",
+            # fmt: on
+        ]
     )
 
 
@@ -120,12 +101,12 @@ def test_get_env_namespace():
 
 
 def test_parser_defaults(parser, dir, filename):
-    args = [str(dir), "-f", filename]
+    args = [dir, "-f", filename]
 
     ns = parser.parse_args(args)
 
     # ns.output_dir will be a Path object
-    assert ns.output_dir == dir
+    assert ns.output_dir == Path(dir)
     assert ns.pact_file == filename
     assert ns.base_class == "django.test.TestCase"
     assert ns.line_length == 88
@@ -203,7 +184,7 @@ def test_get_env_namespace_does_not_contain_unset_values():
 
 @patch_env({"PACT_BROKER_BASE_URL": ENV_DEFAULTS["PACT_BROKER_BASE_URL"]})
 def test_broker_base_url_as_env_var(dir):
-    args = [str(dir), "-s", "TestProvider", "-c", "TestConsumer"]
+    args = [dir, "-s", "TestProvider", "-c", "TestConsumer"]
     opts = cli.build_run_options(args=args)
     assert opts.broker_config is not None
     assert opts.broker_config.base_url == ENV_DEFAULTS["PACT_BROKER_BASE_URL"]
@@ -214,7 +195,7 @@ def test_broker_base_url_as_env_var(dir):
 @patch_env({"PACT_BROKER_BASE_URL": "http://from-env"})
 def test_cli_args_override_env_vars(dir):
     args = [
-        str(dir),
+        dir,
         "-b",
         ENV_DEFAULTS["PACT_BROKER_BASE_URL"],
         "-s",
