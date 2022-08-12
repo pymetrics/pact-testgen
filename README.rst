@@ -47,14 +47,14 @@ Generate a ``provider_states.py`` and ``test_pact.py`` files in your tests direc
 
 ::
 
-    pact-testgen /path/to/pactfile.json /tests/dir
+    pact-testgen /tests/dir -f /path/to/pactfile.json
 
-For more details, see the Usage section of the documentation.
+For more details, see the Usage_ section of the documentation.
 
 Fill in the generated provider states file
 ******************************************
 
-In your tests directory (passed as the second argument to ``pact-testgen``), you'll see a file named ``provider_states.py``. It will contain set up
+In your tests directory (passed as the first argument to ``pact-testgen``), you'll see a file named ``provider_states.py``. It will contain set up
 functions matching the provider states defined in your pact file.
 
 Before continuing, complete these functions so that they create the required states.
@@ -79,3 +79,4 @@ Verification of test responses in generated test code is powered by pactman_.
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Admiranda Urbis Venetæ`: https://www.flickr.com/photos/britishlibrary/51196200069/
 .. _`pactman`: https://github.com/reecetech/pactman
+.. _Usage: https://pact-testgen.readthedocs.io/en/latest/usage.html
