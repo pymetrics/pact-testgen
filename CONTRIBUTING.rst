@@ -66,9 +66,10 @@ Ready to contribute? Here's how to set up `pact_testgen` for local development.
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv pact_testgen
-    $ cd pact_testgen/
-    $ python setup.py develop
+    $ tox -e py39 --devenv .env
+    $ source .env/bin/activate
+
+    Configure your editor / IDE to use the new virtualenv.
 
 4. Create a branch for local development::
 
