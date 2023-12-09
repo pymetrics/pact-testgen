@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Extra, conint, Field, validator
+from pydantic import field_validator, ConfigDict, BaseModel, Field
+from typing_extensions import Annotated
 
 try:
     from typing import Literal
@@ -15,9 +16,9 @@ class Pacticipant(BaseModel):
 
 class Matcher(BaseModel):
     match: Literal["equality", "regex", "type"]
-    max: Optional[int]
-    min: Optional[int]
-    regex: Optional[str]
+    max: Optional[int] = None
+    min: Optional[int] = None
+    regex: Optional[str] = None
 
 
 class MatchingBodyRule(BaseModel):
@@ -30,7 +31,7 @@ class MatchingRule(BaseModel):
 
 class ProviderState(BaseModel):
     name: str
-    params: Optional[Dict]
+    params: Optional[Dict] = None
 
     def full_name(self):
         if not self.params:
@@ -44,9 +45,7 @@ class ProviderState(BaseModel):
 
 class Headers(BaseModel):
     pass
-
-    class Config:
-        extra = Extra.allow
+    model_config = ConfigDict(extra="allow")
 
 
 class Method(Enum):
@@ -62,27 +61,28 @@ class Method(Enum):
 
 
 class PactRequest(BaseModel):
-    body: Optional[Any]
-    headers: Optional[Headers]
+    body: Optional[Any] = None
+    headers: Optional[Headers] = None
     method: Method
     path: str
-    query: Optional[Dict[str, List[str]]]
+    query: Optional[Dict[str, List[str]]] = None
 
-    @validator("method", pre=True)
+    @field_validator("method", mode="before")
+    @classmethod
     def validate_method(cls, v):
         return v.upper()
 
 
 class PactResponse(BaseModel):
-    body: Optional[Any]
-    headers: Optional[Headers]
-    matchingRules: Optional[MatchingRule]
-    status: conint(ge=100, le=599)
+    body: Optional[Any] = None
+    headers: Optional[Headers] = None
+    matchingRules: Optional[MatchingRule] = None
+    status: Annotated[int, Field(ge=100, le=599)]
 
 
 class Interaction(BaseModel):
     description: str
-    providerStates: Optional[List[ProviderState]]
+    providerStates: Optional[List[ProviderState]] = None
     request: PactRequest
     response: PactResponse
 
@@ -92,13 +92,13 @@ class PactSpecification(BaseModel):
 
 
 class Metadata(BaseModel):
-    pactSpecification: Optional[PactSpecification]
+    pactSpecification: Optional[PactSpecification] = None
 
 
 class Pact(BaseModel):
     consumer: Pacticipant
     interactions: List[Interaction]
-    metadata: Optional[Metadata]
+    metadata: Optional[Metadata] = None
     provider: Pacticipant
 
     @property
@@ -114,8 +114,8 @@ class Pact(BaseModel):
 class RequestArgs(BaseModel):
     method: str
     path: str
-    data: Optional[Dict]
-    query_params: Optional[Dict]
+    data: Optional[Dict] = None
+    query_params: Optional[Dict] = None
     content_type: str = "application/json"
 
 

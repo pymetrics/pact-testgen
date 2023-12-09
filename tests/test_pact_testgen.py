@@ -8,7 +8,7 @@ from pact_testgen.pact_testgen import convert_to_test_cases
 
 
 def test_parse_pactfile(pactfile_dict):
-    pact = Pact.parse_obj(pactfile_dict)
+    pact = Pact.model_validate(pactfile_dict)
 
     assert len(pact.interactions) == len(pactfile_dict["interactions"])
     assert pact.consumer.name
