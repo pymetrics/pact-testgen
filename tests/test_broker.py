@@ -8,7 +8,7 @@ from pact_testgen.broker import (
     _make_broker_request,
     get_pact_from_broker,
 )
-from pact_testgen.models import Metadata, Pact, PactSpecification, Pacticipant
+from pact_testgen.models import Metadata, Pact, Pacticipant, PactSpecification
 
 from .utils import patch_env
 
@@ -71,7 +71,7 @@ def test_receive_expected_response(brokerconfig):
     )
 
     with requests_mock.Mocker() as m:
-        m.get(DEFAULT_URL, text=pact.json())
+        m.get(DEFAULT_URL, text=pact.model_dump_json())
 
         retrieved_pact = get_pact_from_broker(
             broker_config=brokerconfig, provider_name=PROVIDER, consumer_name=CONSUMER

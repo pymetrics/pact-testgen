@@ -8,12 +8,12 @@ import json
 from dataclasses import dataclass, field
 from typing import Any, Dict
 
+from pactman.verifier.paths import format_path
+from pactman.verifier.result import Result
+from pactman.verifier.verify import ResponseVerifier
 
 from pact_testgen.models import PactResponse
 from pact_testgen.verify import create_pactman_pact
-from pactman.verifier.verify import ResponseVerifier
-from pactman.verifier.result import Result
-from pactman.verifier.paths import format_path
 
 
 @dataclass
@@ -83,7 +83,7 @@ def verify_response(
     pact_response = PactResponse(**pact_response)
     pactman_pact = create_pactman_pact(consumer_name, provider_name, version)
     verifier = ResponseVerifier(
-        pactman_pact, pact_response.dict(exclude_none=True), UnittestResult()
+        pactman_pact, pact_response.model_dump(exclude_none=True), UnittestResult()
     )
     verifier.verify(actual_response)
     return verifier.result

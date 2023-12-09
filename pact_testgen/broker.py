@@ -16,7 +16,7 @@ class BrokerConfig(BaseModel):
     # Same env vars as pact broker CLI client
     # https://github.com/pact-foundation/pact_broker-client#usage---cli
     base_url: str
-    auth: Optional[BrokerBasicAuthConfig]
+    auth: Optional[BrokerBasicAuthConfig] = None
 
     @property
     def auth_tuple(self) -> Optional[Tuple[str, str]]:

@@ -145,7 +145,6 @@ def convert_to_test_cases(pact: Pact, base_class: str) -> TestFile:
 
 
 def _build_method_args(interaction: Interaction) -> TestMethodArgs:
-
     request_args = RequestArgs(
         method=interaction.request.method.value,
         path=interaction.request.path,
@@ -155,7 +154,7 @@ def _build_method_args(interaction: Interaction) -> TestMethodArgs:
 
     test_method_args = TestMethodArgs(
         description=interaction.description,
-        expectation=repr(interaction.response.dict()),
+        expectation=repr(interaction.response.model_dump()),
         request=request_args,
     )
 

@@ -7,7 +7,6 @@ import pytest
 from pact_testgen.models import Pact
 from pact_testgen.pact_testgen import convert_to_test_cases
 
-
 PROJECT_ROOT = Path(__file__).parent.parent.absolute()
 
 
@@ -36,7 +35,7 @@ def pact(pactfile) -> Pact:
     """
     A sample Pact file, as a Pact object.
     """
-    return Pact.parse_raw(pactfile)
+    return Pact.model_validate_json(pactfile)
 
 
 @pytest.fixture
