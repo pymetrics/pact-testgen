@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "pact-testgen"
+version = "0.7.0"
+description = "Generate Python test cases from Pact files, for easier provider verification."
+authors = [
+    "Chris Lawlor <238952+chrislawlor@users.noreply.github.com>",
+    "David Jetter <david.jetter@pymetrics.com>",
+    "Lance Goodridge <lance.goodridge@pymetrics.com>",
+]
+license = "MIT"
+readme = "README.rst"
+packages = [{ include = "pact_testgen" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+]
+repository = "https://github.com/pymetrics/pact-testgen"
+keywords = ["pact", "contract testing"]
+
+[tool.poetry.scripts]
+pact-testgen = "pact_testgen.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Jinja2 = "^3.1.2"
+pydantic = "^2.0"
+pactman = "^2.30.0"
+python-slugify = "^8.0.1"
+black = "^22.6.0"
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.6.0"
+coverage = "4.5.4"
+pytest = "^7.4.3"
+pytest-cov = "*"
+requests-mock = "^1.11.0"
+Sphinx = "1.8.5"
+tox = "^3.14.0"
+twine = "^4.0.2"
+watchdog = "^3.0.0"
+wheel = "^0.42.0"
+mypy = "^1.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+include = "\\.pyi?$"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+plugins = "pydantic.mypy"

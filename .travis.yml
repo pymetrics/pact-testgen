@@ -2,10 +2,17 @@
 
 dist: focal
 language: python
+cache:
+    pip: true
+    directories:
+        - $HOME/.cache/pypoetry
+        - $HOME/.cache/pre-commit
+
 python:
+    - 3.11
+    - 3.10
     - 3.9
     - 3.8
-    - 3.7
 
 branches:
     only:
